@@ -6,13 +6,14 @@ app.use(bodyParse.urlencoded({extended:true}));
 
 
 //Settings
-const port = process.env.PORT || 3033;
+const port = process.env.PORT || 3030;
 
 //Middlewares
 app.use(express.json());
 
 //Routes
-app.use(require('./routes/SensorConfig'))
+app.use(require('./routes/Online_Sensor'))
+app.use(require('./routes/Sensor_Endpoint'))
 
 //Starting the server
 app.listen(port, () => {

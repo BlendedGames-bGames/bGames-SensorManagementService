@@ -12,8 +12,8 @@ const port = process.env.PORT || 3030;
 app.use(express.json());
 
 //Routes
-app.use(require('./routes/AttributesConfig'))
-app.use(require('./routes/PlayerConfig'))
+app.use(require('./routes/Online_Sensor'))
+app.use(require('./routes/Sensor_Endpoint'))
 
 //Starting the server
 app.listen(port, () => {
