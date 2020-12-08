@@ -157,7 +157,7 @@ router.get('/sensor_endpoints/:id_player/:id_online_sensor',(req,res,next)=>{
     var id_player = req.params.id_player;
     var id_online_sensor = req.params.id_online_sensor;
     console.log('paso por aqui')
-    var select = 'SELECT DISTINCT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`,`sensor_endpoint`.`id_sensor_endpoint`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`,`online_sensor`.`description`,`online_sensor`.`base_url`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`,`sensor_endpoint`.`schedule_time`,`sensor_endpoint`.`initiated_date` ,`sensor_endpoint`.`last_modified`  '
+    var select = 'SELECT DISTINCT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`,`sensor_endpoint`.`id_sensor_endpoint`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`,`online_sensor`.`description`,`online_sensor`.`base_url`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`,`sensor_endpoint`.`schedule_time`,`sensor_endpoint`.`activated`,`sensor_endpoint`.`initiated_date` ,`sensor_endpoint`.`last_modified`  '
     var from = 'FROM `playerss` '
     var join = 'JOIN `playerss_online_sensor` ON `playerss`.`id_players` = `playerss_online_sensor`.`id_players` JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `playerss_online_sensor`.`id_online_sensor` JOIN `sensor_endpoint` ON `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = `online_sensor`.`id_online_sensor` '
     var where = 'WHERE `playerss`.`id_players` = ? AND `sensor_endpoint`.`id_players` = ? AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ?  ' 
@@ -165,7 +165,7 @@ router.get('/sensor_endpoints/:id_player/:id_online_sensor',(req,res,next)=>{
     mysqlConnection.query(query,[id_player,id_online_sensor,id_player], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensor_endpoints: rows})
+            res.status(200).json( rows)
         } else {
             console.log(err);
         }
