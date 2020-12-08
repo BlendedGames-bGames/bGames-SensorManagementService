@@ -188,7 +188,7 @@ router.get('/sensor_endpoints_activated/:id_player/:id_online_sensor',(req,res,n
     mysqlConnection.query(query,[id_player,id_player,id_online_sensor], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensor_endpoints: rows})
+            res.status(200).json(rows)
         } else {
             console.log(err);
         }
@@ -211,7 +211,7 @@ router.get('/sensor_endpoints_deactivated/:id_player/:id_online_sensor',(req,res
     mysqlConnection.query(query,[id_player,id_player,id_online_sensor], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensor_endpoints: rows})
+            res.status(200).json( rows)
         } else {
             console.log(err);
         }
@@ -234,7 +234,7 @@ router.get('/sensor_endpoints/:id_player',(req,res,next)=>{
     mysqlConnection.query(query,[id_player,id_player], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensor_endpoints: rows})
+            res.status(200).json(rows)
         } else {
             console.log(err);
         }
@@ -255,7 +255,7 @@ router.get('/sensor_endpoints_activated/:id_player',(req,res,next)=>{
     mysqlConnection.query(query,[id_player,id_player], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensor_endpoints: rows})
+            res.status(200).json( rows)
         } else {
             console.log(err);
         }
@@ -276,7 +276,7 @@ router.get('/sensor_endpoints_deactivated/:id_player',(req,res,next)=>{
     mysqlConnection.query(query,[id_player,id_player], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensor_endpoints: rows})
+            res.status(200).json( rows)
         } else {
             console.log(err);
         }
@@ -296,7 +296,7 @@ router.get('/online_sensor/:id_online_sensor/sensor_endpoints',(req,res,next)=>{
     mysqlConnection.query(query,[id_online_sensor], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensor_endpoints: rows})
+            res.status(200).json( rows)
         } else {
             console.log(err);
         }
@@ -316,7 +316,7 @@ router.get('/online_sensor/:id_online_sensor/sensor_endpoints_activated',(req,re
     mysqlConnection.query(query,[id_online_sensor], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensor_endpoints: rows})
+            res.status(200).json( rows)
         } else {
             console.log(err);
         }
@@ -336,7 +336,7 @@ router.get('/online_sensor/:id_online_sensor/sensor_endpoints_deactivated',(req,
     mysqlConnection.query(query,[id_online_sensor], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensor_endpoints: rows})
+            res.status(200).json( rows)
         } else {
             console.log(err);
         }
@@ -355,7 +355,7 @@ router.get('/sensor_endpoints',(req,res,next)=>{
     mysqlConnection.query(query, function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensor_endpoints: rows})
+            res.status(200).json( rows)
         } else {
             console.log(err);
         }
@@ -374,7 +374,7 @@ router.get('/sensor_endpoints_activated',(req,res,next)=>{
     mysqlConnection.query(query, function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensor_endpoints: rows})
+            res.status(200).json(rows)
         } else {
             console.log(err);
         }
@@ -394,7 +394,7 @@ router.get('/sensor_endpoints_deactivated',(req,res,next)=>{
     mysqlConnection.query(query, function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensor_endpoints: rows})
+            res.status(200).json(rows)
         } else {
             console.log(err);
         }
@@ -435,7 +435,7 @@ router.post('/sensor_endpoint/:id_player/:id_online_sensor',(req,res,next)=>{
     mysqlConnection.query(query,[id_online_sensor,id_player,sensor_endpoint_data.name,sensor_endpoint_data.description,sensor_endpoint_data.url_endpoint,sensor_endpoint_data.token_parameters,sensor_endpoint_data.specific_parameters,sensor_endpoint_data.watch_parameters,sensor_endpoint_data.schedule_time,sensor_endpoint_data.activated], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensors: rows})
+            res.status(200).json(rows)
         } else {
             console.log(err);
         }
@@ -474,7 +474,7 @@ router.put('/sensor_endpoint/:id_player/:id_online_sensor',(req,res,next)=>{
     mysqlConnection.query(query,[sensor_endpoint_data.name,sensor_endpoint_data.description,sensor_endpoint_data.url_endpoint,sensor_endpoint_data.token_parameters,sensor_endpoint_data.specific_parameters,sensor_endpoint_data.watch_parameters,sensor_endpoint_data.schedule_time,sensor_endpoint_data.activated,id_online_sensor, id_player], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensors: rows})
+            res.status(200).json(rows)
         } else {
             console.log(err);
         }
@@ -500,7 +500,7 @@ router.delete('/sensor_endpoint/:id_sensor_endpoint',(req,res,next)=>{
     mysqlConnection.query(query,[id_sensor_endpoint], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensors: rows})
+            res.status(200).json(rows)
         } else {
             console.log(err);
         }
