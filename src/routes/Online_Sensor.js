@@ -163,7 +163,7 @@ router.post('/sensor/relation/:id_player/:id_online_sensor',(req,res,next)=>{
     mysqlConnection.query(query,[id_player,id_online_sensor,tokens], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensors: rows})
+            res.status(200).json( rows)
         } else {
             console.log(err);
         }
@@ -200,7 +200,7 @@ router.put('/sensor/:id_online_sensor',(req,res,next)=>{
     mysqlConnection.query(query,[newSensorData.name,newSensorData.description,newSensorData.base_url,id_online_sensor], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensors: rows})
+            res.status(200).json( rows)
         } else {
             console.log(err);
         }
@@ -209,7 +209,7 @@ router.put('/sensor/:id_online_sensor',(req,res,next)=>{
 
 //2) Modificar los tokens de la relacion players_online_sensor
 //WORKS
-router.put('/sensor/tokens/:id_player/:id_online_sensor',(req,res,next)=>{
+router.put('/sensor/relation/:id_player/:id_online_sensor',(req,res,next)=>{
     var id_player= req.params.id_player
 
     var id_online_sensor = req.params.id_online_sensor
@@ -226,7 +226,7 @@ router.put('/sensor/tokens/:id_player/:id_online_sensor',(req,res,next)=>{
     mysqlConnection.query(query,[tokens, id_online_sensor, id_player], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensors: rows})
+            res.status(200).json( rows)
         } else {
             console.log(err);
         }
@@ -260,7 +260,7 @@ router.delete('/sensor/:id_online_sensor',(req,res,next)=>{
     mysqlConnection.query(query,[id_online_sensor], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensors: rows})
+            res.status(200).json( rows)
         } else {
             console.log(err);
         }
@@ -281,7 +281,7 @@ router.delete('/sensor/relation/:id_player/:id_online_sensor',(req,res,next)=>{
     mysqlConnection.query(query,[id_player,id_online_sensor], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensors: rows})
+            res.status(200).json( rows)
         } else {
             console.log(err);
         }
