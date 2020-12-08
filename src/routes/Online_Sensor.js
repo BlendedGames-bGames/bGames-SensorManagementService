@@ -65,9 +65,10 @@ router.get('/sensor/:id_online_sensor',(req,res,next)=>{
 
     var query = select+from+where
     mysqlConnection.query(query,[id_online_sensor], function(err,rows,fields){
+        let result = rows[0]
         if (!err){
             console.log(rows);
-            res.status(200).json({sensors: rows})
+            res.status(200).json(result)
         } else {
             console.log(err);
         }
@@ -75,7 +76,7 @@ router.get('/sensor/:id_online_sensor',(req,res,next)=>{
 })
 //2) Obtener TODOS los online_sensors relacionados a un player
 //WORKS
-router.get('/sensor/:id_player',(req,res,next)=>{
+router.get('/sensor/player/:id_player',(req,res,next)=>{
     var id_player = req.params.id_player;
 
     var select = 'SELECT DISTINCT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`,`online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`,`online_sensor`.`last_modified`'
@@ -88,7 +89,7 @@ router.get('/sensor/:id_player',(req,res,next)=>{
     mysqlConnection.query(query,[id_player], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensors: rows})
+            res.status(200).json(rows)
         } else {
             console.log(err);
         }
@@ -98,17 +99,16 @@ router.get('/sensor/:id_player',(req,res,next)=>{
 
 //3) Obtener TODOS los online_sensors de todos los players
 //WORKS
-router.get('/sensor/all',(req,res,next)=>{
-    var id_player = req.params.id_player;
+router.get('/sensors',(req,res,next)=>{
 
-    var select = 'SELECT DISTINCT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`,`online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`, `online_sensor`.`last_modified`'
-    var from = 'FROM `playerss` '
-    var join = 'JOIN `playerss_online_sensor` ON `playerss`.`id_players` = `playerss_online_sensor`.`id_players`  JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `playerss_online_sensor`.`id_online_sensor`'
+    var select = 'SELECT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`, `online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`, `online_sensor`.`last_modified` '
+    var from = ' FROM `playerss` '
+    var join = ' JOIN `playerss_online_sensor` ON `playerss`.`id_players` = `playerss_online_sensor`.`id_players` JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `playerss_online_sensor`.`id_online_sensor` '
     var query = select+from+join
-    mysqlConnection.query(query,[id_player], function(err,rows,fields){
+    mysqlConnection.query(query, function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensors: rows})
+            res.status(200).json(rows)
         } else {
             console.log(err);
         }
@@ -120,22 +120,24 @@ CREATE ENDPOINTS:
 
 1) Crear un online_sensor 
 
-2) Crear la relacion players_online_sensor
+2) Crear la relacion players_online_sensor (equivalente a 'asociarse' a un sensor para un player)
 
 */
 
 //1)Crea un online_sensor 
+//WORKS
 router.post('/sensor',(req,res,next)=>{
     var sensorData = req.body
     var insertInto = 'INSERT INTO `online_sensor`'
     var columnValues = '(`name`,`description`,`base_url`, `initiated_date`, `last_modified`)'
     var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
-    var newValues = 'VALUES (?,?,?,' + date + ',' + date + ')'
+    console.log(typeof(date))
+    var newValues = 'VALUES (?,?,?,' + '\''+date +'\''+ ',' + '\''+date + '\''+')'
     var query = insertInto+columnValues+newValues
     mysqlConnection.query(query,[sensorData.name,sensorData.description,sensorData.base_url], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensors: rows})
+            res.status(200).json( rows)
         } else {
             console.log(err);
         }
@@ -143,16 +145,18 @@ router.post('/sensor',(req,res,next)=>{
 })
 
 //2) Crea la relacion players_online_sensor
+//WORKS
 router.post('/sensor/relation/:id_player/:id_online_sensor',(req,res,next)=>{
     var id_player = req.params.id_player
     var id_online_sensor = req.params.id_online_sensor
-    var tokens = req.body.tokens
+    var tokens = (req.body.tokens)
+    console.log(typeof(tokens))
 
     var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
     var insertInto = 'INSERT INTO `playerss_online_sensor`'
     var columnValues = '(`id_players`,`id_online_sensor`,`tokens`, `initiated_date`,`last_modified` )'
-    var newValues = 'VALUES (?,?,?,'  + date + ',' + date + ')'
+    var newValues = 'VALUES (?,?,?,'  + '\''+date +'\''+ ',' + '\''+date +'\''+ ')'
 
     var query = insertInto+columnValues+newValues
 
@@ -180,7 +184,7 @@ CASCADE Y CASCADE
 */
 
 //1) Modificar la info del sensor (name, description, base_url)
-
+//WORKS
 router.put('/sensor/:id_online_sensor',(req,res,next)=>{
 
     var id_online_sensor = req.params.id_online_sensor
@@ -189,7 +193,7 @@ router.put('/sensor/:id_online_sensor',(req,res,next)=>{
     var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
     var update = 'UPDATE `online_sensor`'
-    var set = ' SET `name` = ?,`description` = ? ,`base_url` = ?, `last_modified` = ' + date 
+    var set = ' SET `name` = ?,`description` = ? ,`base_url` = ?, `last_modified` = ' + '\''+date+'\'' 
     var where = 'WHERE online_sensor.id_online_sensor = ?'
     var query = update+set+where    
 
@@ -204,8 +208,8 @@ router.put('/sensor/:id_online_sensor',(req,res,next)=>{
 })
 
 //2) Modificar los tokens de la relacion players_online_sensor
-
-router.put('/sensor/tokens/:id_player:/:id_online_sensor',(req,res,next)=>{
+//WORKS
+router.put('/sensor/tokens/:id_player/:id_online_sensor',(req,res,next)=>{
     var id_player= req.params.id_player
 
     var id_online_sensor = req.params.id_online_sensor
@@ -215,7 +219,7 @@ router.put('/sensor/tokens/:id_player:/:id_online_sensor',(req,res,next)=>{
     var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
     var update = 'UPDATE `playerss_online_sensor`'
-    var set = ' SET `tokens` = ?, `last_modified` = ' + date 
+    var set = ' SET `tokens` = ?, `last_modified` = ' + '\''+date+'\'' 
     var where = 'WHERE playerss_online_sensor.id_online_sensor = ? AND playerss_online_sensor.id_players = ?'
     var query = update+set+where    
 
@@ -232,11 +236,18 @@ router.put('/sensor/tokens/:id_player:/:id_online_sensor',(req,res,next)=>{
 /*
 DELETE ENDPOINTS:
 
-1) Borrar el online_sensor 
+1) Borrar el online_sensor  
 Causa: Borrar todos los sensor_endpoints relacionados al online_sensor y todas las relaciones players_online_sensor
+on delete on update
 CASCADE Y CASCADE
-*/
 
+2) Borrar la relacion playerss_online_sensor (equivalente a 'desasociarse' de un sensor para un player)
+Causa: Nada debido a que no se borra el sensor ni el player
+on delete on update
+NO ACTION Y CASCADE
+*/
+//1) Borrar el online_sensor 
+//WORKS
 router.delete('/sensor/:id_online_sensor',(req,res,next)=>{
 
     var id_online_sensor = req.params.id_online_sensor
@@ -255,6 +266,26 @@ router.delete('/sensor/:id_online_sensor',(req,res,next)=>{
         }
     });
 })
+//2) Borrar la relacion playerss_online_sensor (equivalente a 'desasociarse' de un sensor para un player)
+//WORKS
+router.delete('/sensor/relation/:id_player/:id_online_sensor',(req,res,next)=>{
+    var id_player = req.params.id_player
 
+    var id_online_sensor = req.params.id_online_sensor
+
+
+    var deleteD = 'DELETE FROM `playerss_online_sensor`'
+    var where = 'WHERE `playerss_online_sensor`. id_players = ? AND `playerss_online_sensor`. id_online_sensor = ?   '
+    var query = deleteD+where    
+
+    mysqlConnection.query(query,[id_player,id_online_sensor], function(err,rows,fields){
+        if (!err){
+            console.log(rows);
+            res.status(200).json({sensors: rows})
+        } else {
+            console.log(err);
+        }
+    });
+})
 module.exports = router;
 

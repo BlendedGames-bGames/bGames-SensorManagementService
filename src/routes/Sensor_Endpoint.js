@@ -129,23 +129,22 @@ WHERE
 //1) Obtener UN sensor_endpoint en particular relacionado a un player y online_sensor
 
 //WORKS
-router.get('/sensor_endpoint/:id_player/:id_online_sensor',(req,res,next)=>{
+router.get('/sensor_endpoint/:id_player/:id_online_sensor/:id_sensor_endpoint',(req,res,next)=>{
     var id_player = req.params.id_player;
     var id_online_sensor = req.params.id_online_sensor;
-    var url_endpoint = req.body.url_endpoint;
+    var id_sensor_endpoint = req.params.id_sensor_endpoint;
 
-    //id = [1,2,3,4,5,6.... ] Id de cada usuario
 
     var select = 'SELECT DISTINCT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`, `sensor_endpoint`.`id_sensor_endpoint`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`, `online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`, `online_sensor`.`last_modified`, `sensor_endpoint`.`name`, `sensor_endpoint`.`description`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`, `sensor_endpoint`.`activated`, `sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified`'
     var from = 'FROM `playerss` '
     var join = 'JOIN `playerss_online_sensor` ON `playerss`.`id_players` = `playerss_online_sensor`.`id_players`     JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `playerss_online_sensor`.`id_online_sensor` JOIN `sensor_endpoint` ON `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = `online_sensor`.`id_online_sensor` '
     var where = 'WHERE `playerss`.`id_players` = ? ' 
-    var and = 'AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ?  AND `sensor_endpoint`.`id_players` = ? AND `sensor_endpoint`.`url_endpoint` = ?'
-    var query = select+from+join+where
-    mysqlConnection.query(query,[id_player,id_online_sensor,id_player,url_endpoint], function(err,rows,fields){
+    var and = 'AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ?  AND `sensor_endpoint`.`id_players` = ? AND `sensor_endpoint`.`id_sensor_endpoint` = ?'
+    var query = select+from+join+where+and
+    mysqlConnection.query(query,[id_player,id_online_sensor,id_player,id_sensor_endpoint], function(err,rows,fields){
         if (!err){
             console.log(rows);
-            res.status(200).json({sensor_endpoints: rows})
+            res.status(200).json(rows[0])
         } else {
             console.log(err);
         }
@@ -154,15 +153,15 @@ router.get('/sensor_endpoint/:id_player/:id_online_sensor',(req,res,next)=>{
 
 //2) Obtener TODOS los sensor_endpoint (activated y desactivated) relacionados a un player y online_sensor
 //WORKS
-router.get('/sensor_endpoint/all/:id_player/:id_online_sensor',(req,res,next)=>{
+router.get('/sensor_endpoints/:id_player/:id_online_sensor',(req,res,next)=>{
     var id_player = req.params.id_player;
     var id_online_sensor = req.params.id_online_sensor;
-
+    console.log('paso por aqui')
     var select = 'SELECT DISTINCT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`,`sensor_endpoint`.`id_sensor_endpoint`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`,`online_sensor`.`description`,`online_sensor`.`base_url`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`,`sensor_endpoint`.`schedule_time`,`sensor_endpoint`.`initiated_date` ,`sensor_endpoint`.`last_modified`  '
     var from = 'FROM `playerss` '
     var join = 'JOIN `playerss_online_sensor` ON `playerss`.`id_players` = `playerss_online_sensor`.`id_players` JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `playerss_online_sensor`.`id_online_sensor` JOIN `sensor_endpoint` ON `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = `online_sensor`.`id_online_sensor` '
     var where = 'WHERE `playerss`.`id_players` = ? AND `sensor_endpoint`.`id_players` = ? AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ?  ' 
-    var query = select+from+join+where+and
+    var query = select+from+join+where
     mysqlConnection.query(query,[id_player,id_online_sensor,id_player], function(err,rows,fields){
         if (!err){
             console.log(rows);
@@ -176,17 +175,17 @@ router.get('/sensor_endpoint/all/:id_player/:id_online_sensor',(req,res,next)=>{
 //3) Obtener TODOS los sensor_endpoint (activated) relacionados a un player y online_sensor
 //WORKS
 
-router.get('/sensor_endpoint/activated/:id_player/:id_online_sensor',(req,res,next)=>{
+router.get('/sensor_endpoints_activated/:id_player/:id_online_sensor',(req,res,next)=>{
     var id_player = req.params.id_player;
     var id_online_sensor = req.params.id_online_sensor;
 
     var select = 'SELECT DISTINCT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`,`sensor_endpoint`.`id_sensor_endpoint`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`,`online_sensor`.`description`,`online_sensor`.`base_url`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`,`sensor_endpoint`.`schedule_time`,`sensor_endpoint`.`initiated_date` ,`sensor_endpoint`.`last_modified`  '
     var from = 'FROM `playerss` '
     var join = 'JOIN `playerss_online_sensor` ON `playerss`.`id_players` = `playerss_online_sensor`.`id_players` JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `playerss_online_sensor`.`id_online_sensor` JOIN `sensor_endpoint` ON `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = `online_sensor`.`id_online_sensor` '
-    var where = 'WHERE `playerss`.`id_players` = ? AND `sensor_endpoint`.`id_players` = ?' 
-    var and = 'AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ?  AND sensor_endpoint`.`activated` = 1'
+    var where = 'WHERE `playerss`.`id_players` = ? AND `sensor_endpoint`.`id_players` = ? ' 
+    var and = 'AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ?  AND `sensor_endpoint`.`activated` = 1'
     var query = select+from+join+where+and
-    mysqlConnection.query(query,[id_player,id_online_sensor], function(err,rows,fields){
+    mysqlConnection.query(query,[id_player,id_player,id_online_sensor], function(err,rows,fields){
         if (!err){
             console.log(rows);
             res.status(200).json({sensor_endpoints: rows})
@@ -199,17 +198,17 @@ router.get('/sensor_endpoint/activated/:id_player/:id_online_sensor',(req,res,ne
 //4) Obtener TODOS los sensor_endpoint (desactivated) relacionados a un player y online_sensor
 //WORKS
 
-router.get('/sensor_endpoint/deactivated/:id_player/:id_online_sensor',(req,res,next)=>{
+router.get('/sensor_endpoints_deactivated/:id_player/:id_online_sensor',(req,res,next)=>{
     var id_player = req.params.id_player;
     var id_online_sensor = req.params.id_online_sensor;
 
     var select = 'SELECT DISTINCT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`,`sensor_endpoint`.`id_sensor_endpoint`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`,`online_sensor`.`description`,`online_sensor`.`base_url`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`,`sensor_endpoint`.`schedule_time`,`sensor_endpoint`.`initiated_date` ,`sensor_endpoint`.`last_modified`  '
     var from = 'FROM `playerss` '
     var join = 'JOIN `playerss_online_sensor` ON `playerss`.`id_players` = `playerss_online_sensor`.`id_players` JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `playerss_online_sensor`.`id_online_sensor` JOIN `sensor_endpoint` ON `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = `online_sensor`.`id_online_sensor` '
-    var where = 'WHERE `playerss`.`id_players` = ? AND `sensor_endpoint`.`id_players` = ?' 
-    var and = 'AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ?  AND sensor_endpoint`.`activated` = 0'
+    var where = 'WHERE `playerss`.`id_players` = ? AND `sensor_endpoint`.`id_players` = ? ' 
+    var and = 'AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ?  AND `sensor_endpoint`.`activated` = 0'
     var query = select+from+join+where+and
-    mysqlConnection.query(query,[id_player,id_online_sensor], function(err,rows,fields){
+    mysqlConnection.query(query,[id_player,id_player,id_online_sensor], function(err,rows,fields){
         if (!err){
             console.log(rows);
             res.status(200).json({sensor_endpoints: rows})
@@ -223,7 +222,7 @@ router.get('/sensor_endpoint/deactivated/:id_player/:id_online_sensor',(req,res,
 
 //WORKS
 
-router.get('/sensor_endpoint/all/:id_player',(req,res,next)=>{
+router.get('/sensor_endpoints/:id_player',(req,res,next)=>{
     var id_player = req.params.id_player;
 
     var select = 'SELECT DISTINCT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`, `sensor_endpoint`.`id_sensor_endpoint`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`, `online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`, `online_sensor`.`last_modified`, `sensor_endpoint`.`name`, `sensor_endpoint`.`description`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`, `sensor_endpoint`.`activated`, `sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified`'
@@ -244,7 +243,7 @@ router.get('/sensor_endpoint/all/:id_player',(req,res,next)=>{
 //6) Obtener TODOS los sensor_endpoint de un player en particular (activated)(tomando en cuenta todos los online_sensor que tiene)
 
 //WORKS
-router.get('/sensor_endpoint/activated/:id_player',(req,res,next)=>{
+router.get('/sensor_endpoints_activated/:id_player',(req,res,next)=>{
     var id_player = req.params.id_player;
 
     var select = 'SELECT DISTINCT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`, `sensor_endpoint`.`id_sensor_endpoint`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`, `online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`, `online_sensor`.`last_modified`, `sensor_endpoint`.`name`, `sensor_endpoint`.`description`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`, `sensor_endpoint`.`activated`, `sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified`'
@@ -253,7 +252,7 @@ router.get('/sensor_endpoint/activated/:id_player',(req,res,next)=>{
     var where = 'WHERE `playerss`.`id_players` = ?' 
     var and = ' AND `sensor_endpoint`.`id_players` = ? AND `sensor_endpoint`.`activated` = 1'
     var query = select+from+join+where+and
-    mysqlConnection.query(query,[id_player,id_online_sensor], function(err,rows,fields){
+    mysqlConnection.query(query,[id_player,id_player], function(err,rows,fields){
         if (!err){
             console.log(rows);
             res.status(200).json({sensor_endpoints: rows})
@@ -265,7 +264,7 @@ router.get('/sensor_endpoint/activated/:id_player',(req,res,next)=>{
 //7) Obtener TODOS los sensor_endpoint de un player en particular (deactivated)(tomando en cuenta todos los online_sensor que tiene)
 
 //WORKS
-router.get('/sensor_endpoint/deactivated/:id_player',(req,res,next)=>{
+router.get('/sensor_endpoints_deactivated/:id_player',(req,res,next)=>{
     var id_player = req.params.id_player;
 
     var select = 'SELECT DISTINCT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`,`sensor_endpoint`.`id_sensor_endpoint`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`,`online_sensor`.`description`,`online_sensor`.`base_url`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`,`sensor_endpoint`.`schedule_time`,`sensor_endpoint`.`initiated_date` ,`sensor_endpoint`.`last_modified`  '
@@ -274,7 +273,7 @@ router.get('/sensor_endpoint/deactivated/:id_player',(req,res,next)=>{
     var where = 'WHERE `playerss`.`id_players` = ?' 
     var and = ' AND `sensor_endpoint`.`id_players` = ? AND `sensor_endpoint`.`activated` = 0'
     var query = select+from+join+where+and
-    mysqlConnection.query(query,[id_player,id_online_sensor], function(err,rows,fields){
+    mysqlConnection.query(query,[id_player,id_player], function(err,rows,fields){
         if (!err){
             console.log(rows);
             res.status(200).json({sensor_endpoints: rows})
@@ -286,7 +285,7 @@ router.get('/sensor_endpoint/deactivated/:id_player',(req,res,next)=>{
 
 //8) Obtener TODOS los sensor_endpoint relacionados a un online_sensor (activated y deactivated)(sin importar de que players son)
 //WORKS
-router.get('/online_sensor/:id_online_sensor/sensor_endpoint/all',(req,res,next)=>{
+router.get('/online_sensor/:id_online_sensor/sensor_endpoints',(req,res,next)=>{
     var id_online_sensor = req.params.id_online_sensor;
 
     var select = 'SELECT `sensor_endpoint`.`id_players`, `sensor_endpoint`.`sensor_endpoint_id_online_sensor`, `sensor_endpoint`.`id_sensor_endpoint`, `sensor_endpoint`.`name`, `sensor_endpoint`.`description`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`, `sensor_endpoint`.`activated`, `sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified`'
@@ -305,7 +304,7 @@ router.get('/online_sensor/:id_online_sensor/sensor_endpoint/all',(req,res,next)
 })
 //9) Obtener TODOS los sensor_endpoint relacionados a un online_sensor (activated)(sin importar de que players son)
 //WORKS
-router.get('/online_sensor/:id_online_sensor/sensor_endpoint/activated',(req,res,next)=>{
+router.get('/online_sensor/:id_online_sensor/sensor_endpoints_activated',(req,res,next)=>{
     var id_online_sensor = req.params.id_online_sensor;
 
     var select = 'SELECT `sensor_endpoint`.`id_players`, `sensor_endpoint`.`sensor_endpoint_id_online_sensor`, `sensor_endpoint`.`id_sensor_endpoint`, `sensor_endpoint`.`name`, `sensor_endpoint`.`description`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`, `sensor_endpoint`.`activated`, `sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified`'
@@ -325,7 +324,7 @@ router.get('/online_sensor/:id_online_sensor/sensor_endpoint/activated',(req,res
 })
 //10) Obtener TODOS los sensor_endpoint relacionados a un online_sensor (deactivated)(sin importar de que players son)
 //WORKS
-router.get('/online_sensor/:id_online_sensor/sensor_endpoint/deactivated',(req,res,next)=>{
+router.get('/online_sensor/:id_online_sensor/sensor_endpoints_deactivated',(req,res,next)=>{
     var id_online_sensor = req.params.id_online_sensor;
 
     var select = 'SELECT `sensor_endpoint`.`id_players`, `sensor_endpoint`.`sensor_endpoint_id_online_sensor`, `sensor_endpoint`.`id_sensor_endpoint`, `sensor_endpoint`.`name`, `sensor_endpoint`.`description`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`, `sensor_endpoint`.`activated`, `sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified`'
@@ -347,7 +346,7 @@ router.get('/online_sensor/:id_online_sensor/sensor_endpoint/deactivated',(req,r
 //11) Obtener TODOS los sensor_endpoints (activated y deactivated) de TODOS los players
 /* WORKS */
 
-router.get('/sensor_endpoint/all',(req,res,next)=>{
+router.get('/sensor_endpoints',(req,res,next)=>{
     var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `sensor_endpoint`.`id_players`, `sensor_endpoint`.`sensor_endpoint_id_online_sensor`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`, `online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`, `online_sensor`.`last_modified`, `sensor_endpoint`.`name`, `sensor_endpoint`.`description`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`, `sensor_endpoint`.`activated`, `sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified`'
     var from = ' FROM `sensor_endpoint` '
     var join = ' JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `sensor_endpoint`.`sensor_endpoint_id_online_sensor` JOIN `playerss_online_sensor` ON `sensor_endpoint`.`id_players` = `playerss_online_sensor`.`id_players` AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` =  `playerss_online_sensor`.`id_online_sensor`'
@@ -366,11 +365,11 @@ router.get('/sensor_endpoint/all',(req,res,next)=>{
 //12) Obtener TODOS los sensor_endpoints (activated) de TODOS los players
 /* WORKS */
 
-router.get('/sensor_endpoint/all/activated',(req,res,next)=>{
-    var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `sensor_endpoint`.`id_players`, `sensor_endpoint`.`sensor_endpoint_id_online_sensor`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`, `online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`, `online_sensor`.`last_modified`, `sensor_endpoint`.`name`, `sensor_endpoint`.`description`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`, `sensor_endpoint`.`activated`, `sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified`'
-    var from = 'FROM `sensor_endpoint` '
-    var join = 'JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `sensor_endpoint`.`sensor_endpoint_id_online_sensor` JOIN `playerss_online_sensor` ON `sensor_endpoint`.`id_players` = `playerss_online_sensor`.`id_players` AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` =  `playerss_online_sensor`.`id_online_sensor`'
-    var where = 'WHERE `sensor_endpoint`.`activated` = 1'
+router.get('/sensor_endpoints_activated',(req,res,next)=>{
+    var select = ' SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `sensor_endpoint`.`id_players`, `sensor_endpoint`.`sensor_endpoint_id_online_sensor`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`, `online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`, `online_sensor`.`last_modified`, `sensor_endpoint`.`name`, `sensor_endpoint`.`description`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`, `sensor_endpoint`.`activated`, `sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified` '
+    var from = ' FROM `sensor_endpoint` '
+    var join = ' JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `sensor_endpoint`.`sensor_endpoint_id_online_sensor` JOIN `playerss_online_sensor` ON `sensor_endpoint`.`id_players` = `playerss_online_sensor`.`id_players` AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` =  `playerss_online_sensor`.`id_online_sensor` '
+    var where = ' WHERE `sensor_endpoint`.`activated` = 1 '
     var query = select+from+join+where
     mysqlConnection.query(query, function(err,rows,fields){
         if (!err){
@@ -386,7 +385,7 @@ router.get('/sensor_endpoint/all/activated',(req,res,next)=>{
 /* WORKS */
 
 
-router.get('/sensor_endpoint/all/deactivated',(req,res,next)=>{
+router.get('/sensor_endpoints_deactivated',(req,res,next)=>{
     var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `sensor_endpoint`.`id_players`, `sensor_endpoint`.`sensor_endpoint_id_online_sensor`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`, `online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`, `online_sensor`.`last_modified`, `sensor_endpoint`.`name`, `sensor_endpoint`.`description`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters`, `sensor_endpoint`.`watch_parameters`, `sensor_endpoint`.`activated`, `sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified`'
     var from = 'FROM `sensor_endpoint` '
     var join = 'JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `sensor_endpoint`.`sensor_endpoint_id_online_sensor` JOIN `playerss_online_sensor` ON `sensor_endpoint`.`id_players` = `playerss_online_sensor`.`id_players` AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` =  `playerss_online_sensor`.`id_online_sensor`'
@@ -426,14 +425,14 @@ router.post('/sensor_endpoint/:id_player/:id_online_sensor',(req,res,next)=>{
     var id_online_sensor = req.params.id_online_sensor;
 
     var sensor_endpoint_data = req.body
-
+    console.log(sensor_endpoint_data)
 
     var insertInto = 'INSERT INTO `sensor_endpoint`'
-    var columnValues = '(`sensor_endpoint_id_online_sensor`,`id_players`,`name`,`description`,`url_endpoint`,`token_parameters`, `specific_parameters`,`watch_parameters`, `schedule_time`,  `initiated_date`, `last_modified`)'
+    var columnValues = '(`sensor_endpoint_id_online_sensor`,`id_players`,`name`,`description`,`url_endpoint`,`token_parameters`, `specific_parameters`,`watch_parameters`, `schedule_time`,  `activated`,`initiated_date`, `last_modified`)'
     var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
-    var newValues = 'VALUES (?,?,?,?,?,?,?,?,?' + date + ',' + date + ')'
+    var newValues = 'VALUES (?,?,?,?,?,?,?,?,?,?,' + '\''+date +'\''+ ',' + '\''+date +'\''+ ')'
     var query = insertInto+columnValues+newValues
-    mysqlConnection.query(query,[id_online_sensor,id_player,sensor_endpoint_data.name,sensor_endpoint_data.description,sensor_endpoint_data.url_endpoint,sensor_endpoint_data.token_parameters,sensor_endpoint_data.specific_parameters,sensor_endpoint_data.watch_parameters,sensor_endpoint_data.schedule_time], function(err,rows,fields){
+    mysqlConnection.query(query,[id_online_sensor,id_player,sensor_endpoint_data.name,sensor_endpoint_data.description,sensor_endpoint_data.url_endpoint,sensor_endpoint_data.token_parameters,sensor_endpoint_data.specific_parameters,sensor_endpoint_data.watch_parameters,sensor_endpoint_data.schedule_time,sensor_endpoint_data.activated], function(err,rows,fields){
         if (!err){
             console.log(rows);
             res.status(200).json({sensors: rows})
@@ -467,12 +466,12 @@ router.put('/sensor_endpoint/:id_player/:id_online_sensor',(req,res,next)=>{
     var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
     var update = 'UPDATE `sensor_endpoint`'
-    var set = ' SET `name` = ?,`description` = ? ,`base_url` = ?, `url_endpoint` = ?, `token_parameters` = ?, `specific_parameters` = ?, `watch_parameters` = ?, `schedule_time` = ?,`last_modified` = ' + date 
+    var set = ' SET `name` = ?,`description` = ? , `url_endpoint` = ?, `token_parameters` = ?, `specific_parameters` = ?, `watch_parameters` = ?, `schedule_time` = ?,`activated` = ?,`last_modified` = ' + '\''+date+'\'' 
     var where = 'WHERE sensor_endpoint.sensor_endpoint_id_online_sensor = ?'
     var and = 'AND sensor_endpoint.id_players = ?'
     var query = update+set+where+and    
 
-    mysqlConnection.query(query,[sensor_endpoint_data.name,sensor_endpoint_data.description,sensor_endpoint_data.url_endpoint,sensor_endpoint_data.token_parameters,sensor_endpoint_data.specific_parameters,sensor_endpoint_data.watch_parameters,sensor_endpoint_data.schedule_time,id_online_sensor, id_player], function(err,rows,fields){
+    mysqlConnection.query(query,[sensor_endpoint_data.name,sensor_endpoint_data.description,sensor_endpoint_data.url_endpoint,sensor_endpoint_data.token_parameters,sensor_endpoint_data.specific_parameters,sensor_endpoint_data.watch_parameters,sensor_endpoint_data.schedule_time,sensor_endpoint_data.activated,id_online_sensor, id_player], function(err,rows,fields){
         if (!err){
             console.log(rows);
             res.status(200).json({sensors: rows})
@@ -495,7 +494,7 @@ router.delete('/sensor_endpoint/:id_sensor_endpoint',(req,res,next)=>{
 
 
     var deleteD = 'DELETE FROM `sensor_endpoint`'
-    var where = 'WHERE `sensor_endpoint`. id_id_sensor_endpoint = ? '
+    var where = 'WHERE `sensor_endpoint`. id_sensor_endpoint = ? '
     var query = deleteD+where    
 
     mysqlConnection.query(query,[id_sensor_endpoint], function(err,rows,fields){
