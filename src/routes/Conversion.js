@@ -35,6 +35,9 @@ router.get('/conversions',(req,res,next)=>{
         id_sensor_endpoint = req.params.id_sensor_endpoint;
         watch_parameters = req.params.watch_parameters;
     }
+    console.log(id_sensor_endpoint)
+    console.log(watch_parameters)
+
     var stringAux = ""
 
     for (let index = 0; index < watch_parameters.length-1; index++) {
