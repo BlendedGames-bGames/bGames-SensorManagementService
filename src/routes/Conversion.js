@@ -34,7 +34,7 @@ router.get('/conversions',(req,res,next)=>{
     var stringAux = watch_parameters[0]
 
     for (let index = 0; index < watch_parameters.length-1; index++) {
-        thisaux += watch_parameters[index]+",";
+        stringAux += watch_parameters[index]+",";
     }
     stringAux += watch_parameters[watch_parameters.length-1];
 
