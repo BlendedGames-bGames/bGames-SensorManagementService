@@ -45,8 +45,17 @@ router.get('/conversions',(req,res,next)=>{
     var query = select+from+join+where
     mysqlConnection.query(query,[id_sensor_endpoint], function(err,rows,fields){
         if (!err){
+            var id_conversions = []
+            var id_subattributes = []
+            var operations = []
+            rows.forEach(result => {
+                id_conversions.push(result.id_conversion)
+                id_subattributes.push(result.id_subattributes)
+                operations.push(result.operations)                
+            });
+
             console.log(rows);
-            res.status(200).json( rows)
+            res.status(200).json({"id_conversions": id_conversions, "id_subattributes": id_subattributes, "operations": operations} )
         } else {
             console.log(err);
         }
