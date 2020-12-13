@@ -31,14 +31,14 @@ WHERE
 router.get('/conversions',(req,res,next)=>{
     var id_sensor_endpoint = req.body.id_sensor_endpoint;
     var watch_parameters = req.body.watch_parameters;
-    var stringAux = watch_parameters[0]
+    var stringAux = ""
 
     for (let index = 0; index < watch_parameters.length-1; index++) {
-        stringAux += watch_parameters[index]+",";
+        stringAux += '\''+watch_parameters[index]+'\''+",";
     }
-    stringAux += watch_parameters[watch_parameters.length-1];
+    stringAux += '\''+watch_parameters[watch_parameters.length-1]+'\'';
 
-    var select = 'SELECT `conversion`.`id_conversion`, `conversion`.`id_subattributes`, `conversion`.`operations`'
+    var select = 'SELECT `conversion`.`id_conversion`, `conversion`.`id_subattributes`, `conversion`.`operations` '
     var from = 'FROM `conversion` '
     var join = 'JOIN `conversion_sensor_endpoint` ON `conversion`.`id_conversion` = `conversion_sensor_endpoint`.`id_conversion`'
     var where = 'WHERE `conversion_sensor_endpoint`.`id_sensor_endpoint` = ? AND `conversion`.`parameters_watched` IN ('+stringAux+')' 
