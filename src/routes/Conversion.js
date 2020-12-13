@@ -29,7 +29,7 @@ WHERE
 
 */
 router.get('/conversions',(req,res,next)=>{
-    console.log(req.body)
+    console.log(req)
     console.log(req.body.id_sensor_endpoint)
     console.log(req.body.watch_parameters)
     console.log(req.params.id_sensor_endpoint)
