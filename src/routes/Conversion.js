@@ -29,8 +29,12 @@ WHERE
 
 */
 router.get('/conversions',(req,res,next)=>{
-    var id_sensor_endpoint = req.params.id_sensor_endpoint;
-    var watch_parameters = req.params.watch_parameters;
+    var id_sensor_endpoint = req.body.id_sensor_endpoint;
+    var watch_parameters = req.body.watch_parameters;
+    if(req.body.id_sensor_endpoint === undefined || req.body.id_sensor_endpoint === null){
+        id_sensor_endpoint = req.params.id_sensor_endpoint;
+        watch_parameters = req.params.watch_parameters;
+    }
     var stringAux = ""
 
     for (let index = 0; index < watch_parameters.length-1; index++) {
