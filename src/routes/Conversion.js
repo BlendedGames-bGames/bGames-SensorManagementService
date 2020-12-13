@@ -29,14 +29,17 @@ WHERE
 
 */
 router.get('/conversions',(req,res,next)=>{
+    
+    console.log(req.body.id_sensor_endpoint)
+    console.log(req.body.watch_parameters)
+    console.log(req.params.id_sensor_endpoint)
+    console.log(req.params.watch_parameters)
     var id_sensor_endpoint = req.body.id_sensor_endpoint;
     var watch_parameters = req.body.watch_parameters;
     if(req.body.id_sensor_endpoint === undefined || req.body.id_sensor_endpoint === null){
         id_sensor_endpoint = req.params.id_sensor_endpoint;
         watch_parameters = req.params.watch_parameters;
     }
-    console.log(id_sensor_endpoint)
-    console.log(watch_parameters)
 
     var stringAux = ""
 
