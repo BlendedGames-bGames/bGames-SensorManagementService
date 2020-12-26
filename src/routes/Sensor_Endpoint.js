@@ -371,7 +371,7 @@ router.get('/sensor_endpoints_activated',(req,res,next)=>{
     var join = 'JOIN `sensor_endpoint` ON `online_sensor`.`id_online_sensor` = `sensor_endpoint`.`sensor_endpoint_id_online_sensor` '
     var join2 = 'JOIN `playerss_online_sensor` ON `online_sensor`.`id_online_sensor` = `playerss_online_sensor`.`id_online_sensor` '
     var join3 = 'JOIN `players_sensor_endpoint` ON `sensor_endpoint`.`id_sensor_endpoint` = `players_sensor_endpoint`.`id_sensor_endpoint` AND `players_sensor_endpoint`.`id_players` =  `playerss_online_sensor`.`id_players` '
-    var where = ' WHERE `sensor_endpoint`.`activated` = 1 '
+    var where = ' WHERE `players_sensor_endpoint`.`activated` = 1 '
     var orderBy = 'ORDER BY `sensor_endpoint`.`id_sensor_endpoint` ASC'
     var query = select+from+join+join2+join3+where+orderBy
     mysqlConnection.query(query, function(err,rows,fields){
