@@ -48,10 +48,10 @@ router.get('/conversions',(req,res,next)=>{
     }
     stringAux += '\''+watch_parameters[watch_parameters.length-1]+'\'';
 
-    var select = 'SELECT `conversion`.`id_conversion`, `conversion`.`id_subattributes`, `conversion`.`operations` '
+    var select = 'SELECT `subattributes_conversion_sensor_endpoint`.`id_conversion`, `subattributes_conversion_sensor_endpoint`.`id_subattributes`, `conversion`.`operations` '
     var from = 'FROM `conversion` '
-    var join = 'JOIN `conversion_sensor_endpoint` ON `conversion`.`id_conversion` = `conversion_sensor_endpoint`.`id_conversion`'
-    var where = 'WHERE `conversion_sensor_endpoint`.`id_sensor_endpoint` = ? AND `conversion`.`parameters_watched` IN ('+stringAux+')' 
+    var join = 'JOIN `subattributes_conversion_sensor_endpoint` ON `conversion`.`id_conversion` = `subattributes_conversion_sensor_endpoint`.`id_conversion`'
+    var where = 'WHERE `subattributes_conversion_sensor_endpoint`.`id_sensor_endpoint` = ? AND `subattributes_conversion_sensor_endpoint`.`parameters_watched` IN ('+stringAux+')' 
     var query = select+from+join+where
     mysqlConnection.query(query,[id_sensor_endpoint], function(err,rows,fields){
         if (!err){
