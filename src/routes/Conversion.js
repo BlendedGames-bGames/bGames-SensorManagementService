@@ -15,7 +15,7 @@ const mysqlConnection = require('../database');
 
    var dataChanges ={  
         "id_sensor_endpoint": id_sensor_endpoint, Ej: 5
-        "watch_parameters":changedParameters  Ej: ['chess_blitz,records,win', 'elo','puzzle_challenge,record']                                     
+        "parameters_watched":changedParameters  Ej: ['chess_blitz,records,win', 'elo','puzzle_challenge,record']                                     
     }
     SELECT
     `conversion`.`id_conversion`,
@@ -31,22 +31,22 @@ WHERE
 router.get('/conversions',(req,res,next)=>{
     console.log(req)
     console.log(req.body.id_sensor_endpoint)
-    console.log(req.body.watch_parameters)
+    console.log(req.body.parameters_watched)
     console.log(req.params.id_sensor_endpoint)
-    console.log(req.params.watch_parameters)
+    console.log(req.params.parameters_watched)
     var id_sensor_endpoint = req.body.id_sensor_endpoint;
-    var watch_parameters = req.body.watch_parameters;
+    var parameters_watched = req.body.parameters_watched;
     if(req.body.id_sensor_endpoint === undefined || req.body.id_sensor_endpoint === null){
         id_sensor_endpoint = req.params.id_sensor_endpoint;
-        watch_parameters = req.params.watch_parameters;
+        parameters_watched = req.params.parameters_watched;
     }
 
     var stringAux = ""
 
-    for (let index = 0; index < watch_parameters.length-1; index++) {
-        stringAux += '\''+watch_parameters[index]+'\''+",";
+    for (let index = 0; index < parameters_watched.length-1; index++) {
+        stringAux += '\''+parameters_watched[index]+'\''+",";
     }
-    stringAux += '\''+watch_parameters[watch_parameters.length-1]+'\'';
+    stringAux += '\''+parameters_watched[parameters_watched.length-1]+'\'';
 
     var select = 'SELECT `subattributes_conversion_sensor_endpoint`.`id_conversion`, `subattributes_conversion_sensor_endpoint`.`id_subattributes`, `conversion`.`operations` '
     var from = 'FROM `conversion` '
