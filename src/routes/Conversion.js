@@ -46,9 +46,10 @@ router.get('/conversions',(req,res,next)=>{
     var formatted = []
     for (const parameter of parameters_watched) {
         //Array: ['finished','win']
-        for(const single of parameter){
-            acum += single
+        for (let index = 0; index < parameter.length-1; index++) {
+            acum += '\''+parameter[index]+'\''+",";
         }
+        acum += '\''+parameter[parameter.length-1]+'\'';
         formatted.push(acum)
         acum = ''        
     }
