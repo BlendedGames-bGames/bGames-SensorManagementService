@@ -51,7 +51,9 @@ router.get('/conversions',(req,res,next)=>{
     }
 
    
-
+    console.log("este es el string a buscar")
+    console.log(stringAux)
+    
     var select = 'SELECT `subattributes_conversion_sensor_endpoint`.`id_conversion`, `subattributes_conversion_sensor_endpoint`.`id_subattributes`, `conversion`.`operations` '
     var from = 'FROM `conversion` '
     var join = 'JOIN `subattributes_conversion_sensor_endpoint` ON `conversion`.`id_conversion` = `subattributes_conversion_sensor_endpoint`.`id_conversion`'
