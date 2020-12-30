@@ -42,18 +42,22 @@ router.get('/conversions',(req,res,next)=>{
     }
 
     var stringAux = ""
+    var acum = ""
+    var formatted = []
     for (const parameter of parameters_watched) {
         //Array: ['finished','win']
-        for (let index = 0; index < parameter.length-1; index++) {
-            stringAux += '\''+parameter[index]+'\''+",";
+        for(const single of parameter){
+            acum += single
         }
-        stringAux += '\''+parameter[parameter.length-1]+'\'';
+        formatted.push(acum)
+        acum = ''        
     }
 
-   
-    console.log("este es el string a buscar")
-    console.log(stringAux)
-    
+    for (let index = 0; index < formatted.length-1; index++) {
+        stringAux += '\''+formatted[index]+'\''+",";
+    }
+    stringAux += '\''+formatted[formatted.length-1]+'\'';
+
     var select = 'SELECT `subattributes_conversion_sensor_endpoint`.`id_conversion`, `subattributes_conversion_sensor_endpoint`.`id_subattributes`, `conversion`.`operations` '
     var from = 'FROM `conversion` '
     var join = 'JOIN `subattributes_conversion_sensor_endpoint` ON `conversion`.`id_conversion` = `subattributes_conversion_sensor_endpoint`.`id_conversion`'
