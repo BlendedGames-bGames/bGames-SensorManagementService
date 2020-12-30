@@ -42,7 +42,7 @@ router.get('/conversions',(req,res,next)=>{
     }
 
     var stringAux = ""
-    var acum = '\''
+    var acum = ""
     var formatted = []
     for (const parameter of parameters_watched) {
         //Array: ['finished','win']
