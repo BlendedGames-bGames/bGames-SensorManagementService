@@ -366,7 +366,7 @@ router.get('/sensor_endpoints',(req,res,next)=>{
 /* WORKS */
 
 router.get('/sensor_endpoints_activated',(req,res,next)=>{
-    var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `players_sensor_endpoint`.`id_players`, `online_sensor`.`id_online_sensor`, `online_sensor`.`base_url`, `playerss_online_sensor`.`tokens`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters` AS `specific_parameters_template`, `sensor_endpoint`.`parameters_watched`, `players_sensor_endpoint`.`specific_parameters`, `players_sensor_endpoint`.`activated`, `players_sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified` '
+    var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `players_sensor_endpoint`.`id_players`, `online_sensor`.`id_online_sensor`, `online_sensor`.`base_url`, `playerss_online_sensor`.`tokens`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters` AS `specific_parameters_template`, `sensor_endpoint`.`watch_parameters`, `players_sensor_endpoint`.`specific_parameters`, `players_sensor_endpoint`.`activated`, `players_sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified` '
     var from = ' FROM `online_sensor` '
     var join = 'JOIN `sensor_endpoint` ON `online_sensor`.`id_online_sensor` = `sensor_endpoint`.`sensor_endpoint_id_online_sensor` '
     var join2 = 'JOIN `playerss_online_sensor` ON `online_sensor`.`id_online_sensor` = `playerss_online_sensor`.`id_online_sensor` '
