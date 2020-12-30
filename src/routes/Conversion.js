@@ -49,7 +49,7 @@ router.get('/conversions',(req,res,next)=>{
         for (let index = 0; index < parameter.length-1; index++) {
             acum += parameter[index]+",";
         }
-        acum += parameter[parameter.length-1]+'\'';
+        acum += parameter[parameter.length-1];
         formatted.push(acum)
         acum = ''        
     }
