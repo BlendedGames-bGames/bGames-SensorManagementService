@@ -42,11 +42,15 @@ router.get('/conversions',(req,res,next)=>{
     }
 
     var stringAux = ""
-
-    for (let index = 0; index < parameters_watched.length-1; index++) {
-        stringAux += '\''+parameters_watched[index]+'\''+",";
+    for (const parameter of parameters_watched) {
+        //Array: ['finished','win']
+        for (let index = 0; index < parameter.length-1; index++) {
+            stringAux += '\''+parameter[index]+'\''+",";
+        }
+        stringAux += '\''+parameter[parameter.length-1]+'\'';
     }
-    stringAux += '\''+parameters_watched[parameters_watched.length-1]+'\'';
+
+   
 
     var select = 'SELECT `subattributes_conversion_sensor_endpoint`.`id_conversion`, `subattributes_conversion_sensor_endpoint`.`id_subattributes`, `conversion`.`operations` '
     var from = 'FROM `conversion` '
