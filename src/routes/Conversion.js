@@ -106,9 +106,9 @@ router.get('/conversion_spend_attribute',(req,res,next)=>{
     var query = select+from+join+join2+join3+where+and
     mysqlConnection.query(query,[id_videogame,id_videogame,id_modifiable_mechanic,id_modifiable_mechanic], function(err,rows,fields){
         if (!err){
-            console.log(rows.id_conversion)
-            console.log(rows.id_attributes)
-            console.log(rows.operations)
+            console.log(rows[0].id_conversion)
+            console.log(rows[0].id_attributes)
+            console.log(rows[0].operations)
 
             res.status(200).json({"id_conversion": rows.id_conversion, "id_attributes": rows.id_attributes, "operations": rows.operations,"options": rows.options} )
         } else {
