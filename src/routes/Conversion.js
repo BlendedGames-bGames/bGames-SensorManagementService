@@ -95,7 +95,7 @@ router.get('/conversion_spend_attribute',(req,res,next)=>{
     if(id_videogame === undefined || id_modifiable_mechanic === undefined){
         res.status(400).json({"message": "Body lacks information"} )
     }
-    var select = 'SELECT `modifiable_conversion_attribute`.`id_conversion`, `modifiable_conversion_attribute`.`id_attributes`, `conversion`.`operations` '
+    var select = 'SELECT `modifiable_conversion_attribute`.`id_conversion`, `modifiable_conversion_attribute`.`id_attributes`, `modifiable_mechanic_videogame`.`options`,`conversion`.`operations` '
     var from = 'FROM `videogame` '
     var join = 'JOIN `modifiable_mechanic_videogame` ON `videogame`.`id_videogame` = `modifiable_mechanic_videogame`.`id_videogame`  JOIN `modifiable_mechanic` ON `modifiable_mechanic`.`id_modifiable_mechanic` = `modifiable_mechanic_videogame`.`id_modifiable_mechanic` '
     var join2 = 'JOIN `modifiable_conversion_attribute` ON `modifiable_conversion_attribute`.`id_modifiable_mechanic` = `modifiable_mechanic`.`id_modifiable_mechanic` JOIN `attributes` ON `attributes`.`id_attributes` = `modifiable_conversion_attribute`.`id_attributes` '
