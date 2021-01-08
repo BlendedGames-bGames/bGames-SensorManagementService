@@ -103,7 +103,7 @@ router.get('/conversion_spend_attribute',(req,res,next)=>{
 
     var where = 'WHERE `videogame`.`id_videogame` = ? AND `modifiable_mechanic_videogame`.`id_videogame` = ? ' 
     var and = 'AND `modifiable_mechanic`.`id_modifiable_mechanic` = ? AND `modifiable_conversion_attribute`.`id_modifiable_mechanic` = ?' 
-    var query = select+from+join+join2+join3+and+where
+    var query = select+from+join+join2+join3+where+and
     mysqlConnection.query(query,[id_videogame,id_videogame,id_modifiable_mechanic,id_modifiable_mechanic], function(err,rows,fields){
         if (!err){
             res.status(200).json({"id_conversion": rows.id_conversion, "id_attributes": rows.id_attributes, "operations": rows.operations} )
