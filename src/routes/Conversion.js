@@ -110,7 +110,7 @@ router.get('/conversion_spend_attribute',(req,res,next)=>{
             console.log(rows[0].id_attributes)
             console.log(rows[0].operations)
 
-            res.status(200).json({"id_conversion": rows.id_conversion, "id_attributes": rows.id_attributes, "operations": rows.operations,"options": rows.options} )
+            res.status(200).json({"id_conversion": rows[0].id_conversion, "id_attributes": rows[0].id_attributes, "operations": rows[0].operations,"options": rows[0].options} )
         } else {
             console.log(err);
         }
