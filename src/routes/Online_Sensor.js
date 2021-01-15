@@ -97,7 +97,7 @@ router.get('/sensor/player/:id_player',(req,res,next)=>{
 })
 
 
-//3) Obtener TODOS los online_sensors de todos los players
+//3) Obtener TODOS los online_sensors asociados a players de TODOS los players
 //WORKS
 router.get('/sensors',(req,res,next)=>{
 
