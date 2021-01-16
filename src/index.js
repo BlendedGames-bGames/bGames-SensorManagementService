@@ -15,6 +15,7 @@ app.use(express.json());
 app.use(require('./routes/Online_Sensor'))
 app.use(require('./routes/Sensor_Endpoint'))
 app.use(require('./routes/Conversion'))
+app.use(require('./routes/Videogame_Mechanic'))
 
 app.get('/', (req, res) => {
     res.send('Hello World!')

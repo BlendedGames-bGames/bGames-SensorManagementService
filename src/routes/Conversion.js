@@ -7,10 +7,100 @@ const fetch = require('node-fetch');
 var common = require('./extras');
 const mysqlConnection = require('../database');
 
-//CRUD de sensor_endpoints 
+//CRUD de conversions 
+/*
+CREATE ENDPOINTS:
 
+1) Crear un conversion 
 
-//2) Obtener TODOS las conversiones relacionados a un sensor_endpoint y los parametros que cambiaron
+2) Crear la relacion modifiable_conversion_attribute (equivalente a 'asociarse' a un sensor para un player)
+
+*/
+
+//1)Crea una conversion 
+//WORKS
+router.post('/conversion',(req,res,next)=>{
+    var sensorData = req.body
+    var insertInto = 'INSERT INTO `conversion` '
+    var columnValues = '(`name`,`description`,`operations`, `initiated_date`, `last_modified`) '
+    var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
+    console.log(typeof(date))
+    var newValues = 'VALUES (?,?,?,' + '\''+date +'\''+ ',' + '\''+date + '\''+')'
+    var query = insertInto+columnValues+newValues
+    mysqlConnection.query(query,[sensorData.name,sensorData.description,sensorData.operations], function(err,rows,fields){
+        if (!err){
+            console.log(rows);
+            res.status(200).json( rows)
+        } else {
+            console.log(err);
+        }
+    });
+})
+//2)Crea una relacion modifiable_conversion_attribute
+//WORKS
+router.post('/modifiable_conversion_attribute',(req,res,next)=>{
+    var relation_data = req.body
+    var insertInto = 'INSERT INTO `modifiable_conversion_attribute` '
+    var columnValues = '(`id_attributes`,`id_conversion`,`id_modifiable_mechanic`) '
+    var newValues = 'VALUES (?,?,?)'
+    var query = insertInto+columnValues+newValues
+    mysqlConnection.query(query,[relation_data.id_attributes,relation_data.id_conversion,relation_data.id_modifiable_mechanic], function(err,rows,fields){
+        if (!err){
+            console.log(rows);
+            res.status(200).json( rows)
+        } else {
+            console.log(err);
+        }
+    });
+})
+/*
+RETRIEVE CONVERSION:
+
+1) Obtener un conversion en particular 
+
+2) Obtener TODAS las conversion en particular 
+
+3) Obtener TODOS las conversiones relacionados a un sensor_endpoint y los parametros que cambiaron
+
+4) Obtener TODOS las conversiones relacionados a atributos y una mecanica en especial
+
+*/
+
+//1) Obtener un conversion en particular
+//WORKS
+router.get('/conversion/:id_conversion',(req,res,next)=>{
+    var id_conversion = req.params.id_conversion
+    var select = 'SELECT `conversion`.`name`, `conversion`.`description`, `conversion`.`operations`, `conversion`.`initiated_date`, `conversion`.`last_modified` '
+    var from = ' FROM `conversion` '
+    var where = 'WHERE `conversion`.`id_conversion` = ?'
+    var query = select+from+join
+    mysqlConnection.query(query,[id_conversion], function(err,rows,fields){
+        if (!err){
+            console.log(rows);
+            res.status(200).json(rows)
+        } else {
+            console.log(err);
+        }
+    });
+})
+
+//1) Obtener TODAS las conversion en particular 
+//WORKS
+router.get('/conversions',(res,next)=>{
+    var select = 'SELECT `conversion`.`name`, `conversion`.`description`, `conversion`.`operations`, `conversion`.`initiated_date`, `conversion`.`last_modified` '
+    var from = ' FROM `conversion` '
+    var query = select+from+join
+    mysqlConnection.query(query, function(err,rows,fields){
+        if (!err){
+            console.log(rows);
+            res.status(200).json(rows)
+        } else {
+            console.log(err);
+        }
+    });
+})
+
+//3) Obtener TODOS las conversiones relacionados a un sensor_endpoint y los parametros que cambiaron
 /*
 
    var dataChanges ={  
@@ -86,6 +176,8 @@ router.get('/conversions',(req,res,next)=>{
     });
 })
 
+//4) Obtener TODOS las conversiones relacionados a atributos y una mecanica en especial
+
 router.get('/conversion_spend_attribute',(req,res,next)=>{
     console.log(req)
     console.log(req.body.id_videogame)
@@ -128,6 +220,95 @@ router.get('/conversion_spend_attribute',(req,res,next)=>{
 })
 
 
+//UPDATE ENDPOINTS:
+//3) Modificar una conversion en especial (name, description, operation)
+//WORKS
+router.put('/conversion/:id_conversion',(req,res,next)=>{
 
+    var id_conversion = req.params.id_conversion
+    var new_conversion_data = req.body
+
+    var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
+
+    var update = 'UPDATE `conversion`'
+    var set = ' SET `name` = ?,`description` = ? ,`operations` = ?, `last_modified` = ' + '\''+date+'\'' 
+    var where = ' WHERE `conversion`.`id_conversion` = ?'
+    var query = update+set+where    
+
+    mysqlConnection.query(query,[new_conversion_data.name,new_conversion_data.description,new_conversion_data.operation,id_conversion], function(err,rows,fields){
+        if (!err){
+            console.log(rows);
+            res.status(200).json( rows)
+        } else {
+            console.log(err);
+        }
+    });
+})
+
+//2) Modificar una relacion conversion atributo y mecanica en especial (id_attributes, id_conversion, id_modifiable_mechanic)
+//WORKS
+router.put('/modifiable_conversion_attribute/:id_attributes/:id_conversion/:id_modifiable_mechanic',(req,res,next)=>{
+    var relation_body = req.body
+
+    var id_attributes = req.params.id_attributes
+    var id_conversion = req.params.id_conversion
+    var id_modifiable_mechanic = req.params.id_modifiable_mechanic
+
+    var update = 'UPDATE `modifiable_conversion_attribute` '
+    var set = ' SET `id_attributes` = ?, `id_conversion` = ?, `id_modifiable_mechanic` = ? ' 
+    var where = ' WHERE `modifiable_conversion_attribute`.`id_attributes` = ? AND `modifiable_conversion_attribute`.`id_conversion` = ? '
+    var and = 'AND `modifiable_conversion_attribute`.`id_modifiable_mechanic` = ?'
+    var query = update+set+where+and    
+
+    mysqlConnection.query(query,[relation_body.id_attributes,relation_body.id_conversion,relation_body.id_modifiable_mechanic, id_attributes,id_conversion, id_modifiable_mechanic], function(err,rows,fields){
+        if (!err){
+            console.log(rows);
+            res.status(200).json( rows)
+        } else {
+            console.log(err);
+        }
+    });
+})
+
+//DELETE ENDPOINTS:
+router.delete('/conversion/:id_conversion',(req,res,next)=>{
+
+    var id_conversion = req.params.id_conversion
+
+
+    var deleteD = 'DELETE FROM `conversion` '
+    var where = 'WHERE `conversion`. id_conversion = ? '
+    var query = deleteD+where    
+
+    mysqlConnection.query(query,[id_conversion], function(err,rows,fields){
+        if (!err){
+            console.log(rows);
+            res.status(200).json( rows)
+        } else {
+            console.log(err);
+        }
+    });
+})
+router.delete('/modifiable_conversion_attribute/:id_attributes/:id_conversion/:id_modifiable_mechanic',(req,res,next)=>{
+
+    var id_attributes = req.params.id_attributes
+    var id_conversion = req.params.id_conversion
+    var id_modifiable_mechanic = req.params.id_modifiable_mechanic
+
+
+    var deleteD = 'DELETE FROM `modifiable_conversion_attribute` '
+    var where = 'WHERE `modifiable_conversion_attribute`. id_conversion = ? '
+    var and = 'AND `modifiable_conversion_attribute`.`id_attributes` = ? AND `modifiable_conversion_attribute`.`id_modifiable_mechanic` = ? '
+    var query = deleteD+where+and
+
+    mysqlConnection.query(query,[id_conversion,id_attributes,id_modifiable_mechanic], function(err,rows,fields){
+        if (!err){
+            console.log(rows);
+            res.status(200).json( rows)
+        } else {
+            console.log(err);
+        }
+    });
+})
 module.exports = router;
 

@@ -76,12 +76,12 @@ router.get('/sensor/:id_online_sensor',(req,res,next)=>{
 })
 //2) Obtener TODOS los online_sensors relacionados a un player
 //WORKS
-router.get('/sensor/player/:id_player',(req,res,next)=>{
+router.get('/sensor_player/:id_player',(req,res,next)=>{
     var id_player = req.params.id_player;
 
     var select = 'SELECT DISTINCT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`,`online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`,`online_sensor`.`last_modified`'
     var from = 'FROM `playerss` '
-    var join = 'JOIN `playerss_online_sensor` ON `playerss`.`id_players` = `playerss_online_sensor`.`id_players`  JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `playerss_online_sensor`.`id_online_sensor`'
+    var join = 'JOIN `playerss_online_sensor` ON `playerss`.`id_players` = `playerss_online_sensor`.`id_players`  JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `playerss_online_sensor`.`id_online_sensor` '
     var where = 'WHERE  `playerss`.`id_players` = ?'
 
     var query = select+from+join+where
@@ -128,8 +128,8 @@ CREATE ENDPOINTS:
 //WORKS
 router.post('/sensor',(req,res,next)=>{
     var sensorData = req.body
-    var insertInto = 'INSERT INTO `online_sensor`'
-    var columnValues = '(`name`,`description`,`base_url`, `initiated_date`, `last_modified`)'
+    var insertInto = 'INSERT INTO `online_sensor` '
+    var columnValues = '(`name`,`description`,`base_url`, `initiated_date`, `last_modified`) '
     var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
     console.log(typeof(date))
     var newValues = 'VALUES (?,?,?,' + '\''+date +'\''+ ',' + '\''+date + '\''+')'
@@ -146,7 +146,7 @@ router.post('/sensor',(req,res,next)=>{
 
 //2) Crea la relacion players_online_sensor
 //WORKS
-router.post('/sensor/relation/:id_player/:id_online_sensor',(req,res,next)=>{
+router.post('/sensor_relation/:id_player/:id_online_sensor',(req,res,next)=>{
     var id_player = req.params.id_player
     var id_online_sensor = req.params.id_online_sensor
     var tokens = (req.body.tokens)
@@ -154,8 +154,8 @@ router.post('/sensor/relation/:id_player/:id_online_sensor',(req,res,next)=>{
 
     var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
-    var insertInto = 'INSERT INTO `playerss_online_sensor`'
-    var columnValues = '(`id_players`,`id_online_sensor`,`tokens`, `initiated_date`,`last_modified` )'
+    var insertInto = 'INSERT INTO `playerss_online_sensor` '
+    var columnValues = '(`id_players`,`id_online_sensor`,`tokens`, `initiated_date`,`last_modified` ) '
     var newValues = 'VALUES (?,?,?,'  + '\''+date +'\''+ ',' + '\''+date +'\''+ ')'
 
     var query = insertInto+columnValues+newValues
@@ -194,7 +194,7 @@ router.put('/sensor/:id_online_sensor',(req,res,next)=>{
 
     var update = 'UPDATE `online_sensor`'
     var set = ' SET `name` = ?,`description` = ? ,`base_url` = ?, `last_modified` = ' + '\''+date+'\'' 
-    var where = 'WHERE online_sensor.id_online_sensor = ?'
+    var where = ' WHERE `online_sensor`.`id_online_sensor` = ?'
     var query = update+set+where    
 
     mysqlConnection.query(query,[newSensorData.name,newSensorData.description,newSensorData.base_url,id_online_sensor], function(err,rows,fields){
@@ -209,7 +209,7 @@ router.put('/sensor/:id_online_sensor',(req,res,next)=>{
 
 //2) Modificar los tokens de la relacion players_online_sensor
 //WORKS
-router.put('/sensor/relation/:id_player/:id_online_sensor',(req,res,next)=>{
+router.put('/sensor_relation/:id_player/:id_online_sensor',(req,res,next)=>{
     var id_player= req.params.id_player
 
     var id_online_sensor = req.params.id_online_sensor
@@ -218,9 +218,9 @@ router.put('/sensor/relation/:id_player/:id_online_sensor',(req,res,next)=>{
 
     var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
-    var update = 'UPDATE `playerss_online_sensor`'
-    var set = ' SET `tokens` = ?, `last_modified` = ' + '\''+date+'\'' 
-    var where = 'WHERE playerss_online_sensor.id_online_sensor = ? AND playerss_online_sensor.id_players = ?'
+    var update = 'UPDATE `playerss_online_sensor` '
+    var set = ' SET `tokens` = ?, `last_modified` = ' + '\''+date+'\' ' 
+    var where = ' WHERE `playerss_online_sensor`.`id_online_sensor` = ? AND `playerss_online_sensor`.`id_players` = ?'
     var query = update+set+where    
 
     mysqlConnection.query(query,[tokens, id_online_sensor, id_player], function(err,rows,fields){
@@ -253,8 +253,8 @@ router.delete('/sensor/:id_online_sensor',(req,res,next)=>{
     var id_online_sensor = req.params.id_online_sensor
 
 
-    var deleteD = 'DELETE FROM `online_sensor`'
-    var where = 'WHERE `online_sensor`. id_online_sensor = ? '
+    var deleteD = 'DELETE FROM `online_sensor` '
+    var where = ' WHERE `online_sensor`.`id_online_sensor` = ? '
     var query = deleteD+where    
 
     mysqlConnection.query(query,[id_online_sensor], function(err,rows,fields){
@@ -268,14 +268,14 @@ router.delete('/sensor/:id_online_sensor',(req,res,next)=>{
 })
 //2) Borrar la relacion playerss_online_sensor (equivalente a 'desasociarse' de un sensor para un player)
 //WORKS
-router.delete('/sensor/relation/:id_player/:id_online_sensor',(req,res,next)=>{
+router.delete('/sensor_relation/:id_player/:id_online_sensor',(req,res,next)=>{
     var id_player = req.params.id_player
 
     var id_online_sensor = req.params.id_online_sensor
 
 
-    var deleteD = 'DELETE FROM `playerss_online_sensor`'
-    var where = 'WHERE `playerss_online_sensor`. id_players = ? AND `playerss_online_sensor`. id_online_sensor = ?   '
+    var deleteD = 'DELETE FROM `playerss_online_sensor` '
+    var where = ' WHERE `playerss_online_sensor`.`id_players` = ? AND `playerss_online_sensor`.`id_online_sensor` = ?   '
     var query = deleteD+where    
 
     mysqlConnection.query(query,[id_player,id_online_sensor], function(err,rows,fields){

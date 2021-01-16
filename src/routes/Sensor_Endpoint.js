@@ -486,7 +486,6 @@ router.post('/sensor_endpoint/:id_player/:id_sensor_endpoint',(req,res,next)=>{
 //2)Crea un sensor_endpoint template 
 
 router.post('/sensor_endpoint/:id_online_sensor',(req,res,next)=>{
-    var id_player = req.params.id_player;
     var id_online_sensor = req.params.id_online_sensor;
 
     var sensor_endpoint_data = req.body
@@ -524,7 +523,7 @@ UPDATE ENDPOINTS:
 */
 //1) Modificar la info del sensor endpoint asociado a un player
 
-router.put('/sensor_endpoint/:id_players/:id_sensor_endpoint/:id_sensor_endpoint',(req,res,next)=>{
+router.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,next)=>{
     var id_players = req.params.id_players
     var id_sensor_endpoint = req.params.id_sensor_endpoint
 
@@ -550,8 +549,7 @@ router.put('/sensor_endpoint/:id_players/:id_sensor_endpoint/:id_sensor_endpoint
 })
 //2) Modificar la info del sensor endpoint template 
 
-router.put('/sensor_endpoint/:id_online_sensor',(req,res,next)=>{
-    var id_online_sensor = req.params.id_online_sensor
+router.put('/sensor_endpoint/:id_sensor_endpoint',(req,res,next)=>{
     var id_sensor_endpoint = req.params.id_sensor_endpoint
 
     var sensor_endpoint_data = req.body
@@ -560,11 +558,10 @@ router.put('/sensor_endpoint/:id_online_sensor',(req,res,next)=>{
 
     var update = 'UPDATE `sensor_endpoint`'
     var set = ' SET `name` = ?,`description` = ? , `url_endpoint` = ?, `token_parameters` = ?, `specific_parameters` = ?, `watch_parameters` = ?, `last_modified` = ' + '\''+date+'\'' 
-    var where = 'WHERE sensor_endpoint.sensor_endpoint_id_online_sensor = ?'
-    var and = ' AND sensor_endpoint.id_sensor_endpoint = ?'
-    var query = update+set+where+and    
+    var where = 'WHERE `sensor_endpoint`.`id_sensor_endpoint` = ?'
+    var query = update+set+where
 
-    mysqlConnection.query(query,[sensor_endpoint_data.name,sensor_endpoint_data.description,sensor_endpoint_data.url_endpoint,sensor_endpoint_data.token_parameters,sensor_endpoint_data.specific_parameters,sensor_endpoint_data.watch_parameters,id_online_sensor,id_sensor_endpoint], function(err,rows,fields){
+    mysqlConnection.query(query,[sensor_endpoint_data.name,sensor_endpoint_data.description,sensor_endpoint_data.url_endpoint,sensor_endpoint_data.token_parameters,sensor_endpoint_data.specific_parameters,sensor_endpoint_data.watch_parameters,id_sensor_endpoint], function(err,rows,fields){
         if (!err){
             console.log(rows);
             res.status(200).json(rows)
