@@ -102,7 +102,7 @@ router.get('/modifiable_mechanic_videogame/:id_videogame/:id_modifiable_mechanic
     var where = 'WHERE `modifiable_mechanic_videogame`.`id_videogame` = ? ' 
     var and = 'AND `modifiable_mechanic_videogame`.`id_modifiable_mechanic` = ?' 
 
-    var query = select+from+where
+    var query = select+from+where+and
     mysqlConnection.query(query,[id_videogame,id_modifiable_mechanic], function(err,rows,fields){
         let result = rows[0]
         if (!err){
