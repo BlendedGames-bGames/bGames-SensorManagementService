@@ -4,11 +4,13 @@
   "description": "Display and Configuration service",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "prod": "cross-env NODE_ENV=production node src/index.js"
   },
   "author": "Grybyus",
   "license": "ISC",
   "dependencies": {
+    "cross-env": "^7.0.3",
     "express": "^4.17.1",
     "mysql": "^2.18.1",
     "node-fetch": "^2.6.1"
