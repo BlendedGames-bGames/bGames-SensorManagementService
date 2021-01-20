@@ -6,7 +6,7 @@ app.use(bodyParse.urlencoded({extended:true}));
 
 
 //Settings
-const port = process.env.PORT || 3030;
+const port = process.env.PORT || 3007;
 
 //Middlewares
 app.use(express.json());
