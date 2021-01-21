@@ -17,10 +17,6 @@ app.use(require('./routes/Sensor_Endpoint'))
 app.use(require('./routes/Conversion'))
 app.use(require('./routes/Videogame_Mechanic'))
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-  })
-
 //Starting the server
 app.listen(port, () => {
  console.log(`listening on port ${port} ...... `);
