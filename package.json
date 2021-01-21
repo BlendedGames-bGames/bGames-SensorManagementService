@@ -8,7 +8,9 @@
     "start": "node ./build/bin/www",
     "prod": "cross-env NODE_ENV=production  babel-node ./src/bin/www",
     "dev": "nodemon --exec babel-node ./src/bin/www",
-    "test": "nyc --reporter=html --reporter=text --reporter=lcov mocha -r @babel/register"
+    "test": "nyc --reporter=html --reporter=text --reporter=lcov mocha -r @babel/register",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
+
   },
   "author": "Grybyus",
   "license": "ISC",
