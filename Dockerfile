@@ -4,4 +4,4 @@ COPY package.json ./
 RUN npm install
 COPY . ./
 RUN ls -l
-CMD ["npm", "run", "prod"]
+CMD ["npm-run-all", "--serial", "prestart", "start"]

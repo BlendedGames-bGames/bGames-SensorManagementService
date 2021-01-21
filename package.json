@@ -1,11 +1,12 @@
 {
-  "name": "attributedisplayandconfigurationservice",
+  "name": "bgames-sensormanagementservice",
   "version": "1.0.0",
-  "description": "Display and Configuration service",
-  "main": "index.js",
+  "description": "Sensor management service",
+  "main": "/src/bin/www",
   "scripts": {
+    "prestart": "babel ./src --out-dir build",
+    "start": "node ./build/bin/www",
     "dev": "nodemon --exec babel-node ./src/bin/www",
-    "prod": "cross-env NODE_ENV=production node ./src/bin/www",
     "test": "nyc --reporter=html --reporter=text --reporter=lcov mocha -r @babel/register"
   },
   "author": "Grybyus",
