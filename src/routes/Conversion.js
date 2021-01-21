@@ -1,10 +1,5 @@
 const express = require('express');
 const router = express.Router();
-
-var http = require('http');
-
-const fetch = require('node-fetch');
-var common = require('./extras');
 const mysqlConnection = require('../database');
 
 //CRUD de conversions 
