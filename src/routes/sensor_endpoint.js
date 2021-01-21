@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const sensor_endpoint = express.Router();
 
 const mysqlConnection = require('../database');
 
@@ -125,7 +125,7 @@ WHERE
 //1) Obtener UN sensor_endpoint en particular relacionado a un player y online_sensor
 
 //WORKS
-router.get('/sensor_endpoint/:id_player/:id_online_sensor/:id_sensor_endpoint',(req,res,next)=>{
+sensor_endpoint.get('/sensor_endpoint/:id_player/:id_online_sensor/:id_sensor_endpoint',(req,res,next)=>{
     var id_player = req.params.id_player;
     var id_online_sensor = req.params.id_online_sensor;
     var id_sensor_endpoint = req.params.id_sensor_endpoint;
@@ -152,7 +152,7 @@ router.get('/sensor_endpoint/:id_player/:id_online_sensor/:id_sensor_endpoint',(
 
 //2) Obtener TODOS los sensor_endpoint (activated y desactivated) relacionados a un player y online_sensor
 //WORKS
-router.get('/sensor_endpoints/:id_player/:id_online_sensor',(req,res,next)=>{
+sensor_endpoint.get('/sensor_endpoints/:id_player/:id_online_sensor',(req,res,next)=>{
     var id_player = req.params.id_player;
     var id_online_sensor = req.params.id_online_sensor;
 
@@ -178,7 +178,7 @@ router.get('/sensor_endpoints/:id_player/:id_online_sensor',(req,res,next)=>{
 //3) Obtener TODOS los sensor_endpoint (activated) relacionados a un player y online_sensor
 //WORKS
 
-router.get('/sensor_endpoints_activated/:id_player/:id_online_sensor',(req,res,next)=>{
+sensor_endpoint.get('/sensor_endpoints_activated/:id_player/:id_online_sensor',(req,res,next)=>{
     var id_player = req.params.id_player;
     var id_online_sensor = req.params.id_online_sensor;
 
@@ -205,7 +205,7 @@ router.get('/sensor_endpoints_activated/:id_player/:id_online_sensor',(req,res,n
 //4) Obtener TODOS los sensor_endpoint (desactivated) relacionados a un player y online_sensor
 //WORKS
 
-router.get('/sensor_endpoints_deactivated/:id_player/:id_online_sensor',(req,res,next)=>{
+sensor_endpoint.get('/sensor_endpoints_deactivated/:id_player/:id_online_sensor',(req,res,next)=>{
     var id_player = req.params.id_player;
     var id_online_sensor = req.params.id_online_sensor;
 
@@ -234,7 +234,7 @@ router.get('/sensor_endpoints_deactivated/:id_player/:id_online_sensor',(req,res
 
 //WORKS
 
-router.get('/sensor_endpoints/:id_player',(req,res,next)=>{
+sensor_endpoint.get('/sensor_endpoints/:id_player',(req,res,next)=>{
     var id_player = req.params.id_player;
 
     var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `players_sensor_endpoint`.`id_players`, `online_sensor`.`id_online_sensor`, `online_sensor`.`base_url`, `playerss_online_sensor`.`tokens`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters` AS `specific_parameters_template`, `sensor_endpoint`.`watch_parameters`, `players_sensor_endpoint`.`specific_parameters`, `players_sensor_endpoint`.`activated`, `players_sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified` '
@@ -257,7 +257,7 @@ router.get('/sensor_endpoints/:id_player',(req,res,next)=>{
 //6) Obtener TODOS los sensor_endpoint de un player en particular (activated)(tomando en cuenta todos los online_sensor que tiene)
 
 //WORKS
-router.get('/sensor_endpoints_activated/:id_player',(req,res,next)=>{
+sensor_endpoint.get('/sensor_endpoints_activated/:id_player',(req,res,next)=>{
     var id_player = req.params.id_player;
 
     var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `players_sensor_endpoint`.`id_players`, `online_sensor`.`id_online_sensor`, `online_sensor`.`base_url`, `playerss_online_sensor`.`tokens`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters` AS `specific_parameters_template`, `sensor_endpoint`.`watch_parameters`, `players_sensor_endpoint`.`specific_parameters`, `players_sensor_endpoint`.`activated`, `players_sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified` '
@@ -281,7 +281,7 @@ router.get('/sensor_endpoints_activated/:id_player',(req,res,next)=>{
 //7) Obtener TODOS los sensor_endpoint de un player en particular (deactivated)(tomando en cuenta todos los online_sensor que tiene)
 
 //WORKS
-router.get('/sensor_endpoints_deactivated/:id_player',(req,res,next)=>{
+sensor_endpoint.get('/sensor_endpoints_deactivated/:id_player',(req,res,next)=>{
     var id_player = req.params.id_player;
     var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `players_sensor_endpoint`.`id_players`, `online_sensor`.`id_online_sensor`, `online_sensor`.`base_url`, `playerss_online_sensor`.`tokens`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters` AS `specific_parameters_template`, `sensor_endpoint`.`watch_parameters`, `players_sensor_endpoint`.`specific_parameters`, `players_sensor_endpoint`.`activated`, `players_sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified` '
     var from = ' FROM `online_sensor` '
@@ -304,7 +304,7 @@ router.get('/sensor_endpoints_deactivated/:id_player',(req,res,next)=>{
 
 //8) Obtener TODOS los sensor_endpoint relacionados a un online_sensor (activated y deactivated)(sin importar de que players son)
 //WORKS
-router.get('/online_sensor/:id_online_sensor/sensor_endpoints',(req,res,next)=>{
+sensor_endpoint.get('/online_sensor/:id_online_sensor/sensor_endpoints',(req,res,next)=>{
     var id_online_sensor = req.params.id_online_sensor;
 
     var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `players_sensor_endpoint`.`id_players`, `online_sensor`.`id_online_sensor`, `online_sensor`.`base_url`, `playerss_online_sensor`.`tokens`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters` AS `specific_parameters_template`, `sensor_endpoint`.`watch_parameters`, `players_sensor_endpoint`.`specific_parameters`, `players_sensor_endpoint`.`activated`, `players_sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified` '
@@ -326,7 +326,7 @@ router.get('/online_sensor/:id_online_sensor/sensor_endpoints',(req,res,next)=>{
 })
 //9) Obtener TODOS los sensor_endpoint relacionados a un online_sensor (activated)(sin importar de que players son)
 //WORKS
-router.get('/online_sensor/:id_online_sensor/sensor_endpoints_activated',(req,res,next)=>{
+sensor_endpoint.get('/online_sensor/:id_online_sensor/sensor_endpoints_activated',(req,res,next)=>{
     var id_online_sensor = req.params.id_online_sensor;
 
     var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `players_sensor_endpoint`.`id_players`, `online_sensor`.`id_online_sensor`, `online_sensor`.`base_url`, `playerss_online_sensor`.`tokens`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters` AS `specific_parameters_template`, `sensor_endpoint`.`watch_parameters`, `players_sensor_endpoint`.`specific_parameters`, `players_sensor_endpoint`.`activated`, `players_sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified` '
@@ -349,7 +349,7 @@ router.get('/online_sensor/:id_online_sensor/sensor_endpoints_activated',(req,re
 })
 //10) Obtener TODOS los sensor_endpoint relacionados a un online_sensor (deactivated)(sin importar de que players son)
 //WORKS
-router.get('/online_sensor/:id_online_sensor/sensor_endpoints_deactivated',(req,res,next)=>{
+sensor_endpoint.get('/online_sensor/:id_online_sensor/sensor_endpoints_deactivated',(req,res,next)=>{
     var id_online_sensor = req.params.id_online_sensor;
 
     var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `players_sensor_endpoint`.`id_players`, `online_sensor`.`id_online_sensor`, `online_sensor`.`base_url`, `playerss_online_sensor`.`tokens`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters` AS `specific_parameters_template`, `sensor_endpoint`.`watch_parameters`, `players_sensor_endpoint`.`specific_parameters`, `players_sensor_endpoint`.`activated`, `players_sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified` '
@@ -373,7 +373,7 @@ router.get('/online_sensor/:id_online_sensor/sensor_endpoints_deactivated',(req,
 //11) Obtener TODOS los sensor_endpoints (activated y deactivated) de TODOS los players
 /* WORKS */
 
-router.get('/sensor_endpoints',(req,res,next)=>{
+sensor_endpoint.get('/sensor_endpoints',(req,res,next)=>{
     var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `players_sensor_endpoint`.`id_players`, `online_sensor`.`id_online_sensor`, `online_sensor`.`base_url`, `playerss_online_sensor`.`tokens`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters` AS `specific_parameters_template`, `sensor_endpoint`.`watch_parameters`, `players_sensor_endpoint`.`specific_parameters`, `players_sensor_endpoint`.`activated`, `players_sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified` '
     var from = ' FROM `online_sensor` '
     var join = 'JOIN `sensor_endpoint` ON `online_sensor`.`id_online_sensor` = `sensor_endpoint`.`sensor_endpoint_id_online_sensor` '
@@ -394,7 +394,7 @@ router.get('/sensor_endpoints',(req,res,next)=>{
 //12) Obtener TODOS los sensor_endpoints (activated) de TODOS los players
 /* WORKS */
 
-router.get('/sensor_endpoints_activated',(req,res,next)=>{
+sensor_endpoint.get('/sensor_endpoints_activated',(req,res,next)=>{
     var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `players_sensor_endpoint`.`id_players`, `online_sensor`.`id_online_sensor`, `online_sensor`.`base_url`, `playerss_online_sensor`.`tokens`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters` AS `specific_parameters_template`, `sensor_endpoint`.`watch_parameters`, `players_sensor_endpoint`.`specific_parameters`, `players_sensor_endpoint`.`activated`, `players_sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified` '
     var from = ' FROM `online_sensor` '
     var join = 'JOIN `sensor_endpoint` ON `online_sensor`.`id_online_sensor` = `sensor_endpoint`.`sensor_endpoint_id_online_sensor` '
@@ -418,7 +418,7 @@ router.get('/sensor_endpoints_activated',(req,res,next)=>{
 /* WORKS */
 
 
-router.get('/sensor_endpoints_deactivated',(req,res,next)=>{
+sensor_endpoint.get('/sensor_endpoints_deactivated',(req,res,next)=>{
     var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `players_sensor_endpoint`.`id_players`, `online_sensor`.`id_online_sensor`, `online_sensor`.`base_url`, `playerss_online_sensor`.`tokens`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters` AS `specific_parameters_template`, `sensor_endpoint`.`watch_parameters`, `players_sensor_endpoint`.`specific_parameters`, `players_sensor_endpoint`.`activated`, `players_sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified` '
     var from = ' FROM `online_sensor` '
     var join = 'JOIN `sensor_endpoint` ON `online_sensor`.`id_online_sensor` = `sensor_endpoint`.`sensor_endpoint_id_online_sensor` '
@@ -456,7 +456,7 @@ CREATE ENDPOINTS:
 
 //1)Crea asociacion de un jugador a un sensor_endpoint en especifico
 
-router.post('/sensor_endpoint/:id_player/:id_sensor_endpoint',(req,res,next)=>{
+sensor_endpoint.post('/sensor_endpoint/:id_player/:id_sensor_endpoint',(req,res,next)=>{
     var id_player = req.params.id_player;
     var id_sensor_endpoint = req.params.id_sensor_endpoint;
 
@@ -481,7 +481,7 @@ router.post('/sensor_endpoint/:id_player/:id_sensor_endpoint',(req,res,next)=>{
 
 //2)Crea un sensor_endpoint template 
 
-router.post('/sensor_endpoint/:id_online_sensor',(req,res,next)=>{
+sensor_endpoint.post('/sensor_endpoint/:id_online_sensor',(req,res,next)=>{
     var id_online_sensor = req.params.id_online_sensor;
 
     var sensor_endpoint_data = req.body
@@ -519,7 +519,7 @@ UPDATE ENDPOINTS:
 */
 //1) Modificar la info del sensor endpoint asociado a un player
 
-router.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,next)=>{
+sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,next)=>{
     var id_players = req.params.id_players
     var id_sensor_endpoint = req.params.id_sensor_endpoint
 
@@ -545,7 +545,7 @@ router.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,next)=>{
 })
 //2) Modificar la info del sensor endpoint template 
 
-router.put('/sensor_endpoint/:id_sensor_endpoint',(req,res,next)=>{
+sensor_endpoint.put('/sensor_endpoint/:id_sensor_endpoint',(req,res,next)=>{
     var id_sensor_endpoint = req.params.id_sensor_endpoint
 
     var sensor_endpoint_data = req.body
@@ -573,7 +573,7 @@ DELETE ENDPOINTS:
 Causa: No existen repercusiones a otras tablas actualmente
 */
 
-router.delete('/sensor_endpoint/:id_sensor_endpoint',(req,res,next)=>{
+sensor_endpoint.delete('/sensor_endpoint/:id_sensor_endpoint',(req,res,next)=>{
 
     var id_sensor_endpoint = req.params.id_sensor_endpoint
 
@@ -596,7 +596,7 @@ router.delete('/sensor_endpoint/:id_sensor_endpoint',(req,res,next)=>{
 Causa: No existen repercusiones a otras tablas actualmente
 */
 
-router.delete('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,next)=>{
+sensor_endpoint.delete('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,next)=>{
     var id_players = req.params.id_players
 
     var id_sensor_endpoint = req.params.id_sensor_endpoint
@@ -621,5 +621,5 @@ router.delete('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,next)=
 
 
 
-module.exports = router;
+export default sensor_endpoint;
 

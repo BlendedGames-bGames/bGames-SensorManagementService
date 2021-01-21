@@ -21,3 +21,5 @@ app.use(require('./routes/Videogame_Mechanic'))
 app.listen(port, () => {
  console.log(`listening on port ${port} ...... `);
 });
+
+export default app;

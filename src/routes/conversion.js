@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const conversion = express.Router();
 const mysqlConnection = require('../database');
 
 //CRUD de conversions 
@@ -14,7 +14,7 @@ CREATE ENDPOINTS:
 
 //1)Crea una conversion 
 //WORKS
-router.post('/conversion',(req,res,next)=>{
+conversion.post('/conversion',(req,res,next)=>{
     var sensorData = req.body
     var insertInto = 'INSERT INTO `conversion` '
     var columnValues = '(`name`,`description`,`operations`, `initiated_date`, `last_modified`) '
@@ -33,7 +33,7 @@ router.post('/conversion',(req,res,next)=>{
 })
 //2)Crea una relacion modifiable_conversion_attribute
 //WORKS
-router.post('/modifiable_conversion_attribute',(req,res,next)=>{
+conversion.post('/modifiable_conversion_attribute',(req,res,next)=>{
     var relation_data = req.body
     var insertInto = 'INSERT INTO `modifiable_conversion_attribute` '
     var columnValues = '(`id_attributes`,`id_conversion`,`id_modifiable_mechanic`) '
@@ -63,7 +63,7 @@ RETRIEVE CONVERSION:
 
 //1) Obtener un conversion en particular
 //WORKS
-router.get('/conversion/:id_conversion',(req,res,next)=>{
+conversion.get('/conversion/:id_conversion',(req,res,next)=>{
     var id_conversion = req.params.id_conversion
     var select = 'SELECT `conversion`.`name`, `conversion`.`description`, `conversion`.`operations`, `conversion`.`initiated_date`, `conversion`.`last_modified` '
     var from = ' FROM `conversion` '
@@ -81,7 +81,7 @@ router.get('/conversion/:id_conversion',(req,res,next)=>{
 
 //1) Obtener TODAS las conversion en particular 
 //WORKS
-router.get('/conversions',(res,next)=>{
+conversion.get('/conversions',(res,next)=>{
     var select = 'SELECT `conversion`.`name`, `conversion`.`description`, `conversion`.`operations`, `conversion`.`initiated_date`, `conversion`.`last_modified` '
     var from = ' FROM `conversion` '
     var query = select+from+join
@@ -113,7 +113,7 @@ WHERE
     `conversion_sensor_endpoint`.`id_sensor_endpoint` = 2 AND `conversion`.`parameters_watched` IN ('followers')
 
 */
-router.get('/conversions',(req,res,next)=>{
+conversion.get('/conversions',(req,res,next)=>{
     console.log(req)
     console.log(req.body.id_sensor_endpoint)
     console.log(req.body.parameters_watched)
@@ -173,7 +173,7 @@ router.get('/conversions',(req,res,next)=>{
 
 //4) Obtener TODOS las conversiones relacionados a atributos y una mecanica en especial
 
-router.get('/conversion_spend_attribute',(req,res,next)=>{
+conversion.get('/conversion_spend_attribute',(req,res,next)=>{
     console.log(req)
     console.log(req.body.id_videogame)
     console.log(req.body.id_modifiable_mechanic)
@@ -218,7 +218,7 @@ router.get('/conversion_spend_attribute',(req,res,next)=>{
 //UPDATE ENDPOINTS:
 //3) Modificar una conversion en especial (name, description, operation)
 //WORKS
-router.put('/conversion/:id_conversion',(req,res,next)=>{
+conversion.put('/conversion/:id_conversion',(req,res,next)=>{
 
     var id_conversion = req.params.id_conversion
     var new_conversion_data = req.body
@@ -242,7 +242,7 @@ router.put('/conversion/:id_conversion',(req,res,next)=>{
 
 //2) Modificar una relacion conversion atributo y mecanica en especial (id_attributes, id_conversion, id_modifiable_mechanic)
 //WORKS
-router.put('/modifiable_conversion_attribute/:id_attributes/:id_conversion/:id_modifiable_mechanic',(req,res,next)=>{
+conversion.put('/modifiable_conversion_attribute/:id_attributes/:id_conversion/:id_modifiable_mechanic',(req,res,next)=>{
     var relation_body = req.body
 
     var id_attributes = req.params.id_attributes
@@ -266,7 +266,7 @@ router.put('/modifiable_conversion_attribute/:id_attributes/:id_conversion/:id_m
 })
 
 //DELETE ENDPOINTS:
-router.delete('/conversion/:id_conversion',(req,res,next)=>{
+conversion.delete('/conversion/:id_conversion',(req,res,next)=>{
 
     var id_conversion = req.params.id_conversion
 
@@ -284,7 +284,7 @@ router.delete('/conversion/:id_conversion',(req,res,next)=>{
         }
     });
 })
-router.delete('/modifiable_conversion_attribute/:id_attributes/:id_conversion/:id_modifiable_mechanic',(req,res,next)=>{
+conversion.delete('/modifiable_conversion_attribute/:id_attributes/:id_conversion/:id_modifiable_mechanic',(req,res,next)=>{
 
     var id_attributes = req.params.id_attributes
     var id_conversion = req.params.id_conversion
@@ -305,5 +305,5 @@ router.delete('/modifiable_conversion_attribute/:id_attributes/:id_conversion/:i
         }
     });
 })
-module.exports = router;
+export default conversion;
 
