@@ -81,7 +81,7 @@ conversion.get('/conversion/:id_conversion',(req,res,next)=>{
 
 //1) Obtener TODAS las conversion en particular 
 //WORKS
-conversion.get('/conversions',(res,next)=>{
+conversion.get('/conversions_all',(res,next)=>{
     var select = 'SELECT `conversion`.`name`, `conversion`.`description`, `conversion`.`operations`, `conversion`.`initiated_date`, `conversion`.`last_modified` '
     var from = ' FROM `conversion` '
     var query = select+from+join
