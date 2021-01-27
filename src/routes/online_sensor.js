@@ -66,15 +66,26 @@ online_sensor.get('/sensor/:id_online_sensor',(req,res,next)=>{
     var where = 'WHERE `online_sensor`.`id_online_sensor` = ?' 
 
     var query = select+from+where
-    mysqlConnection.query(query,[id_online_sensor], function(err,rows,fields){
-        let result = rows[0]
-        if (!err){
-            console.log(rows);
-            res.status(200).json(result)
-        } else {
-            console.log(err);
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
         }
-    });
+        connection.query(query,[id_online_sensor], function(err,rows,fields){
+            if (!err){
+                let result = rows[0]
+                console.log(rows);
+                res.status(200).json(result)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+      })
+
+ 
 })
 //2) Obtener TODOS los online_sensors relacionados a un player
 //WORKS
@@ -87,15 +98,23 @@ online_sensor.get('/sensor_player/:id_player',(req,res,next)=>{
     var where = 'WHERE  `playerss`.`id_players` = ?'
 
     var query = select+from+join+where
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_player], function(err,rows){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[id_player], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+      })
 })
 
 
@@ -107,14 +126,23 @@ online_sensor.get('/sensors',(req,res,next)=>{
     var from = ' FROM `playerss` '
     var join = ' JOIN `playerss_online_sensor` ON `playerss`.`id_players` = `playerss_online_sensor`.`id_players` JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `playerss_online_sensor`.`id_online_sensor` '
     var query = select+from+join
-    mysqlConnection.query(query, function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query, function(err,rows){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+      })
 })
 
 /*
@@ -136,14 +164,23 @@ online_sensor.post('/sensor',(req,res,next)=>{
     console.log(typeof(date))
     var newValues = 'VALUES (?,?,?,' + '\''+date +'\''+ ',' + '\''+date + '\''+')'
     var query = insertInto+columnValues+newValues
-    mysqlConnection.query(query,[sensorData.name,sensorData.description,sensorData.base_url], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[sensorData.name,sensorData.description,sensorData.base_url], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+      })
 })
 
 //2) Crea la relacion players_online_sensor
@@ -161,15 +198,23 @@ online_sensor.post('/sensor_relation/:id_player/:id_online_sensor',(req,res,next
     var newValues = 'VALUES (?,?,?,'  + '\''+date +'\''+ ',' + '\''+date +'\''+ ')'
 
     var query = insertInto+columnValues+newValues
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_player,id_online_sensor,tokens], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[id_player,id_online_sensor,tokens], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+      })
 })
 
 
@@ -198,15 +243,23 @@ online_sensor.put('/sensor/:id_online_sensor',(req,res,next)=>{
     var set = ' SET `name` = ?,`description` = ? ,`base_url` = ?, `last_modified` = ' + '\''+date+'\'' 
     var where = ' WHERE `online_sensor`.`id_online_sensor` = ?'
     var query = update+set+where    
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[newSensorData.name,newSensorData.description,newSensorData.base_url,id_online_sensor], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[newSensorData.name,newSensorData.description,newSensorData.base_url,id_online_sensor], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+      })
 })
 
 //2) Modificar los tokens de la relacion players_online_sensor
@@ -224,15 +277,23 @@ online_sensor.put('/sensor_relation/:id_player/:id_online_sensor',(req,res,next)
     var set = ' SET `tokens` = ?, `last_modified` = ' + '\''+date+'\' ' 
     var where = ' WHERE `playerss_online_sensor`.`id_online_sensor` = ? AND `playerss_online_sensor`.`id_players` = ?'
     var query = update+set+where    
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        mysqlConnection.query(query,[tokens, id_online_sensor, id_player], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[tokens, id_online_sensor, id_player], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+      })
 })
 
 /*
@@ -258,15 +319,23 @@ online_sensor.delete('/sensor/:id_online_sensor',(req,res,next)=>{
     var deleteD = 'DELETE FROM `online_sensor` '
     var where = ' WHERE `online_sensor`.`id_online_sensor` = ? '
     var query = deleteD+where    
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_online_sensor], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[id_online_sensor], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+      })
 })
 //2) Borrar la relacion playerss_online_sensor (equivalente a 'desasociarse' de un sensor para un player)
 //WORKS
@@ -279,15 +348,23 @@ online_sensor.delete('/sensor_relation/:id_player/:id_online_sensor',(req,res,ne
     var deleteD = 'DELETE FROM `playerss_online_sensor` '
     var where = ' WHERE `playerss_online_sensor`.`id_players` = ? AND `playerss_online_sensor`.`id_online_sensor` = ?   '
     var query = deleteD+where    
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_player,id_online_sensor], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[id_player,id_online_sensor], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+    })
 })
 export default online_sensor;
 

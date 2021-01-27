@@ -22,14 +22,24 @@ conversion.post('/conversion',(req,res,next)=>{
     console.log(typeof(date))
     var newValues = 'VALUES (?,?,?,' + '\''+date +'\''+ ',' + '\''+date + '\''+')'
     var query = insertInto+columnValues+newValues
-    mysqlConnection.query(query,[sensorData.name,sensorData.description,sensorData.operations], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[sensorData.name,sensorData.description,sensorData.operations], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
+        
 })
 //2)Crea una relacion modifiable_conversion_attribute
 //WORKS
@@ -39,14 +49,23 @@ conversion.post('/modifiable_conversion_attribute',(req,res,next)=>{
     var columnValues = '(`id_attributes`,`id_conversion`,`id_modifiable_mechanic`) '
     var newValues = 'VALUES (?,?,?)'
     var query = insertInto+columnValues+newValues
-    mysqlConnection.query(query,[relation_data.id_attributes,relation_data.id_conversion,relation_data.id_modifiable_mechanic], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[relation_data.id_attributes,relation_data.id_conversion,relation_data.id_modifiable_mechanic], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
 })
 /*
 RETRIEVE CONVERSION:
@@ -69,14 +88,23 @@ conversion.get('/conversion/:id_conversion',(req,res,next)=>{
     var from = ' FROM `conversion` '
     var where = 'WHERE `conversion`.`id_conversion` = ?'
     var query = select+from+join
-    mysqlConnection.query(query,[id_conversion], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_conversion], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
 })
 
 //1) Obtener TODAS las conversion en particular 
@@ -85,14 +113,23 @@ conversion.get('/conversions_all',(res,next)=>{
     var select = 'SELECT `conversion`.`name`, `conversion`.`description`, `conversion`.`operations`, `conversion`.`initiated_date`, `conversion`.`last_modified` '
     var from = ' FROM `conversion` '
     var query = select+from+join
-    mysqlConnection.query(query, function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query, function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
 })
 
 //3) Obtener TODOS las conversiones relacionados a un sensor_endpoint y los parametros que cambiaron
@@ -152,23 +189,33 @@ conversion.get('/conversions',(req,res,next)=>{
     var join = 'JOIN `subattributes_conversion_sensor_endpoint` ON `conversion`.`id_conversion` = `subattributes_conversion_sensor_endpoint`.`id_conversion`'
     var where = 'WHERE `subattributes_conversion_sensor_endpoint`.`id_sensor_endpoint` = ? AND `subattributes_conversion_sensor_endpoint`.`parameters_watched` IN ('+stringAux+')' 
     var query = select+from+join+where
-    mysqlConnection.query(query,[id_sensor_endpoint], function(err,rows,fields){
-        if (!err){
-            var id_conversions = []
-            var id_subattributes = []
-            var operations = []
-            rows.forEach(result => {
-                id_conversions.push(result.id_conversion)
-                id_subattributes.push(result.id_subattributes)
-                operations.push(result.operations)                
-            });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_sensor_endpoint], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                var id_conversions = []
+                var id_subattributes = []
+                var operations = []
+                rows.forEach(result => {
+                    id_conversions.push(result.id_conversion)
+                    id_subattributes.push(result.id_subattributes)
+                    operations.push(result.operations)                
+                });
+    
+                res.status(200).json({"id_conversions": id_conversions, "id_subattributes": id_subattributes, "operations": operations} )
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-            console.log(rows);
-            res.status(200).json({"id_conversions": id_conversions, "id_subattributes": id_subattributes, "operations": operations} )
-        } else {
-            console.log(err);
-        }
-    });
+        });
+    })
+
 })
 
 //4) Obtener TODOS las conversiones relacionados a atributos y una mecanica en especial
@@ -191,27 +238,38 @@ conversion.get('/conversion_spend_attribute',(req,res,next)=>{
     var where = 'WHERE `videogame`.`id_videogame` = ? AND `modifiable_mechanic_videogame`.`id_videogame` = ? ' 
     var and = 'AND `modifiable_mechanic`.`id_modifiable_mechanic` = ? AND `modifiable_conversion_attribute`.`id_modifiable_mechanic` = ?' 
     var query = select+from+join+join2+join3+where+and
-    mysqlConnection.query(query,[id_videogame,id_videogame,id_modifiable_mechanic,id_modifiable_mechanic], function(err,rows,fields){
-        if (!err){
-            var id_conversion = []
-            var id_attributes = []
-            var operations = []
-            var options = []
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_videogame,id_videogame,id_modifiable_mechanic,id_modifiable_mechanic], function(err,rows,fields){
+            if (!err){
+                console.log(rows)
+                var id_conversion = []
+                var id_attributes = []
+                var operations = []
+                var options = []
+    
+                rows.forEach(result => {
+                    id_conversion.push(result.id_conversion)
+                    id_attributes.push(result.id_attributes)
+                    operations.push(result.operations)    
+                    options.push(result.options)                
+                
+                });
+    
+    
+                res.status(200).json({"id_conversion": id_conversion, "id_attributes": id_attributes, "operations": operations,"options": options} )
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-            rows.forEach(result => {
-                id_conversion.push(result.id_conversion)
-                id_attributes.push(result.id_attributes)
-                operations.push(result.operations)    
-                options.push(result.options)                
-            
-            });
+        });
+    })
 
-
-            res.status(200).json({"id_conversion": id_conversion, "id_attributes": id_attributes, "operations": operations,"options": options} )
-        } else {
-            console.log(err);
-        }
-    });
 })
 
 
@@ -229,15 +287,23 @@ conversion.put('/conversion/:id_conversion',(req,res,next)=>{
     var set = ' SET `name` = ?,`description` = ? ,`operations` = ?, `last_modified` = ' + '\''+date+'\'' 
     var where = ' WHERE `conversion`.`id_conversion` = ?'
     var query = update+set+where    
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[new_conversion_data.name,new_conversion_data.description,new_conversion_data.operation,id_conversion], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json( rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[new_conversion_data.name,new_conversion_data.description,new_conversion_data.operation,id_conversion], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+    })
 })
 
 //2) Modificar una relacion conversion atributo y mecanica en especial (id_attributes, id_conversion, id_modifiable_mechanic)
@@ -254,15 +320,23 @@ conversion.put('/modifiable_conversion_attribute/:id_attributes/:id_conversion/:
     var where = ' WHERE `modifiable_conversion_attribute`.`id_attributes` = ? AND `modifiable_conversion_attribute`.`id_conversion` = ? '
     var and = 'AND `modifiable_conversion_attribute`.`id_modifiable_mechanic` = ?'
     var query = update+set+where+and    
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[relation_body.id_attributes,relation_body.id_conversion,relation_body.id_modifiable_mechanic, id_attributes,id_conversion, id_modifiable_mechanic], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json( rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[relation_body.id_attributes,relation_body.id_conversion,relation_body.id_modifiable_mechanic, id_attributes,id_conversion, id_modifiable_mechanic], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+    })
 })
 
 //DELETE ENDPOINTS:
@@ -274,15 +348,23 @@ conversion.delete('/conversion/:id_conversion',(req,res,next)=>{
     var deleteD = 'DELETE FROM `conversion` '
     var where = 'WHERE `conversion`. id_conversion = ? '
     var query = deleteD+where    
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_conversion], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json( rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[id_conversion], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+    })
 })
 conversion.delete('/modifiable_conversion_attribute/:id_attributes/:id_conversion/:id_modifiable_mechanic',(req,res,next)=>{
 
@@ -295,15 +377,23 @@ conversion.delete('/modifiable_conversion_attribute/:id_attributes/:id_conversio
     var where = 'WHERE `modifiable_conversion_attribute`. id_conversion = ? '
     var and = 'AND `modifiable_conversion_attribute`.`id_attributes` = ? AND `modifiable_conversion_attribute`.`id_modifiable_mechanic` = ? '
     var query = deleteD+where+and
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_conversion,id_attributes,id_modifiable_mechanic], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json( rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[id_conversion,id_attributes,id_modifiable_mechanic], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+    })
 })
 export default conversion;
 

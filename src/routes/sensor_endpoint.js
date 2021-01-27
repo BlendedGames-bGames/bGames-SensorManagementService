@@ -139,15 +139,23 @@ sensor_endpoint.get('/sensor_endpoint/:id_player/:id_online_sensor/:id_sensor_en
     var and = ' AND `online_sensor`.`id_online_sensor` = ? AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ? AND `playerss_online_sensor`.`id_online_sensor` = ? '
     var and2 = 'AND `sensor_endpoint`.`id_sensor_endpoint` = ? AND `players_sensor_endpoint`.`id_sensor_endpoint` = ? '
     var query = select+from+join+join2+join3+where+and+and2
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_player,id_player,id_online_sensor,id_online_sensor,id_online_sensor,id_sensor_endpoint,id_sensor_endpoint], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows[0])
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[id_player,id_player,id_online_sensor,id_online_sensor,id_online_sensor,id_sensor_endpoint,id_sensor_endpoint], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows[0])
-        } else {
-            console.log(err);
-        }
-    });
+        });
+    })
 })
 
 //2) Obtener TODOS los sensor_endpoint (activated y desactivated) relacionados a un player y online_sensor
@@ -165,14 +173,23 @@ sensor_endpoint.get('/sensor_endpoints/:id_player/:id_online_sensor',(req,res,ne
     var and = ' AND `online_sensor`.`id_online_sensor` = ? AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ? AND `playerss_online_sensor`.`id_online_sensor` = ? '
 
     var query = select+from+join+join2+join3+where+and
-    mysqlConnection.query(query,[id_player,id_player,id_online_sensor,id_online_sensor,id_online_sensor], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_player,id_player,id_online_sensor,id_online_sensor,id_online_sensor], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
 })
 
 //3) Obtener TODOS los sensor_endpoint (activated) relacionados a un player y online_sensor
@@ -192,14 +209,23 @@ sensor_endpoint.get('/sensor_endpoints_activated/:id_player/:id_online_sensor',(
     var and2 = ' AND `online_sensor`.`id_online_sensor` = ? AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ? AND `playerss_online_sensor`.`id_online_sensor` = ? '
 
     var query = select+from+join+join2+join3+where+and+and2
-    mysqlConnection.query(query,[id_player,id_player,id_online_sensor,id_online_sensor,id_online_sensor], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        mysqlConnection.query(query,[id_player,id_player,id_online_sensor,id_online_sensor,id_online_sensor], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
 })
 
 //4) Obtener TODOS los sensor_endpoint (desactivated) relacionados a un player y online_sensor
@@ -219,15 +245,23 @@ sensor_endpoint.get('/sensor_endpoints_deactivated/:id_player/:id_online_sensor'
     var and2 = ' AND `online_sensor`.`id_online_sensor` = ? AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ? AND `playerss_online_sensor`.`id_online_sensor` = ? '
 
     var query = select+from+join+join2+join3+where+and+and2
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_player,id_player,id_online_sensor,id_online_sensor,id_online_sensor], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[id_player,id_player,id_online_sensor,id_online_sensor,id_online_sensor], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+    })
 })
 
 //5) Obtener TODOS los sensor_endpoint de un player en particular (activated y deactivated)(tomando en cuenta todos los online_sensor que tiene)
@@ -244,15 +278,23 @@ sensor_endpoint.get('/sensor_endpoints/:id_player',(req,res,next)=>{
     var join3 = 'JOIN `players_sensor_endpoint` ON `sensor_endpoint`.`id_sensor_endpoint` = `players_sensor_endpoint`.`id_sensor_endpoint` AND `players_sensor_endpoint`.`id_players` =  `playerss_online_sensor`.`id_players` '
     var where = ' WHERE `players_sensor_endpoint`.`id_players` = ? AND `playerss_online_sensor`.`id_players` = ? '
     var query = select+from+join+join2+join3+where
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_player,id_player], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[id_player,id_player], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+    })
 })
 //6) Obtener TODOS los sensor_endpoint de un player en particular (activated)(tomando en cuenta todos los online_sensor que tiene)
 
@@ -268,15 +310,23 @@ sensor_endpoint.get('/sensor_endpoints_activated/:id_player',(req,res,next)=>{
     var where = ' WHERE `players_sensor_endpoint`.`activated` = 1 '
     var and = ' AND `players_sensor_endpoint`.`id_players` = ? AND `playerss_online_sensor`.`id_players` = ? '
     var query = select+from+join+join2+join3+where+and
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_player,id_player], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[id_player,id_player], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+    })
 })
 //7) Obtener TODOS los sensor_endpoint de un player en particular (deactivated)(tomando en cuenta todos los online_sensor que tiene)
 
@@ -292,14 +342,23 @@ sensor_endpoint.get('/sensor_endpoints_deactivated/:id_player',(req,res,next)=>{
     var and = ' AND `players_sensor_endpoint`.`id_players` = ? AND `playerss_online_sensor`.`id_players` = ? '
     var query = select+from+join+join2+join3+where+and
     
-    mysqlConnection.query(query,[id_player,id_player], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_player,id_player], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
 })
 
 //8) Obtener TODOS los sensor_endpoint relacionados a un online_sensor (activated y deactivated)(sin importar de que players son)
@@ -314,15 +373,23 @@ sensor_endpoint.get('/online_sensor/:id_online_sensor/sensor_endpoints',(req,res
     var join3 = 'JOIN `players_sensor_endpoint` ON `sensor_endpoint`.`id_sensor_endpoint` = `players_sensor_endpoint`.`id_sensor_endpoint` AND `players_sensor_endpoint`.`id_players` =  `playerss_online_sensor`.`id_players` '
     var where = ' WHERE `online_sensor`.`id_online_sensor` = ? AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ? AND `playerss_online_sensor`.`id_online_sensor` = ? '
     var query = select+from+join+join2+join3+where
-    
-    mysqlConnection.query(query,[id_online_sensor,id_online_sensor,id_online_sensor], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_online_sensor,id_online_sensor,id_online_sensor], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
 })
 //9) Obtener TODOS los sensor_endpoint relacionados a un online_sensor (activated)(sin importar de que players son)
 //WORKS
@@ -337,15 +404,23 @@ sensor_endpoint.get('/online_sensor/:id_online_sensor/sensor_endpoints_activated
     var where = ' WHERE `players_sensor_endpoint`.`activated` = 1 '
     var and = ' AND `online_sensor`.`id_online_sensor` = ? AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ? AND `playerss_online_sensor`.`id_online_sensor` = ? '
     var query = select+from+join+join2+join3+where+and
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        mysqlConnection.query(query,[id_online_sensor,id_online_sensor,id_online_sensor], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[id_online_sensor,id_online_sensor,id_online_sensor], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+    })
 })
 //10) Obtener TODOS los sensor_endpoint relacionados a un online_sensor (deactivated)(sin importar de que players son)
 //WORKS
@@ -360,14 +435,23 @@ sensor_endpoint.get('/online_sensor/:id_online_sensor/sensor_endpoints_deactivat
     var where = ' WHERE `players_sensor_endpoint`.`activated` = 0 '
     var and = ' AND `online_sensor`.`id_online_sensor` = ? AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ? AND `playerss_online_sensor`.`id_online_sensor` = ? '
     var query = select+from+join+join2+join3+where+and
-    mysqlConnection.query(query,[id_online_sensor,id_online_sensor,id_online_sensor], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json( rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_online_sensor,id_online_sensor,id_online_sensor], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
 })
 
 //11) Obtener TODOS los sensor_endpoints (activated y deactivated) de TODOS los players
@@ -381,14 +465,23 @@ sensor_endpoint.get('/sensor_endpoints',(req,res,next)=>{
     var join3 = 'JOIN `players_sensor_endpoint` ON `sensor_endpoint`.`id_sensor_endpoint` = `players_sensor_endpoint`.`id_sensor_endpoint` AND `players_sensor_endpoint`.`id_players` =  `playerss_online_sensor`.`id_players` '
     var orderBy = 'ORDER BY `sensor_endpoint`.`id_sensor_endpoint` ASC'
     var query = select+from+join+join2+join3+where+orderBy
-    mysqlConnection.query(query, function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query, function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
 })
 
 //12) Obtener TODOS los sensor_endpoints (activated) de TODOS los players
@@ -403,14 +496,23 @@ sensor_endpoint.get('/sensor_endpoints_activated',(req,res,next)=>{
     var where = ' WHERE `players_sensor_endpoint`.`activated` = 1 '
     var orderBy = 'ORDER BY `sensor_endpoint`.`id_sensor_endpoint` ASC'
     var query = select+from+join+join2+join3+where+orderBy
-    mysqlConnection.query(query, function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query, function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
 })
 
 
@@ -427,14 +529,23 @@ sensor_endpoint.get('/sensor_endpoints_deactivated',(req,res,next)=>{
     var where = ' WHERE `players_sensor_endpoint`.`activated` = 0 '
     var orderBy = 'ORDER BY `sensor_endpoint`.`id_sensor_endpoint` ASC'
     var query = select+from+join+join2+join3+where+orderBy
-    mysqlConnection.query(query, function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query, function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
 })
 
 
@@ -469,14 +580,23 @@ sensor_endpoint.post('/sensor_endpoint/:id_player/:id_sensor_endpoint',(req,res,
     var columnValues = '(`id_players`,`id_sensor_endpoint`,`specific_parameters`,`activated`, `schedule_time`)'
     var newValues = 'VALUES (?,?,?,?,?)'
     var query = insertInto+columnValues+newValues
-    mysqlConnection.query(query,[id_player,id_sensor_endpoint,sensor_endpoint_data.specific_parameters,sensor_endpoint_data.activated,sensor_endpoint_data.schedule_time], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_player,id_sensor_endpoint,sensor_endpoint_data.specific_parameters,sensor_endpoint_data.activated,sensor_endpoint_data.schedule_time], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
 })
 
 //2)Crea un sensor_endpoint template 
@@ -493,14 +613,23 @@ sensor_endpoint.post('/sensor_endpoint/:id_online_sensor',(req,res,next)=>{
     var columnValues = '(`sensor_endpoint_id_online_sensor`,`name`,`description`,`url_endpoint`,`token_parameters`, `specific_parameters`,`watch_parameters`,`initiated_date`, `last_modified`)'
     var newValues = 'VALUES (?,?,?,?,?,?,?,' + '\''+date +'\''+ ',' + '\''+date +'\''+ ')'
     var query = insertInto+columnValues+newValues
-    mysqlConnection.query(query,[id_online_sensor,sensor_endpoint_data.name,sensor_endpoint_data.description,sensor_endpoint_data.url_endpoint,sensor_endpoint_data.token_parameters,sensor_endpoint_data.specific_parameters,sensor_endpoint_data.watch_parameters], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows)
-        } else {
-            console.log(err);
-        }
-    });
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_online_sensor,sensor_endpoint_data.name,sensor_endpoint_data.description,sensor_endpoint_data.url_endpoint,sensor_endpoint_data.token_parameters,sensor_endpoint_data.specific_parameters,sensor_endpoint_data.watch_parameters], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
 })
 /*
 UPDATE ENDPOINTS:
@@ -533,15 +662,24 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,
     var where = 'WHERE players_sensor_endpoint.id_players = ? '
     var and = ' AND players_sensor_endpoint.id_sensor_endpoint = ? '
     var query = update+set+where+and    
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[sensor_endpoint_data.specific_parameters,sensor_endpoint_data.activated,sensor_endpoint_data.schedule_time,id_players,id_sensor_endpoint], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[sensor_endpoint_data.specific_parameters,sensor_endpoint_data.activated,sensor_endpoint_data.schedule_time,id_players,id_sensor_endpoint], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+    })
+
 })
 //2) Modificar la info del sensor endpoint template 
 
@@ -556,15 +694,23 @@ sensor_endpoint.put('/sensor_endpoint/:id_sensor_endpoint',(req,res,next)=>{
     var set = ' SET `name` = ?,`description` = ? , `url_endpoint` = ?, `token_parameters` = ?, `specific_parameters` = ?, `watch_parameters` = ?, `last_modified` = ' + '\''+date+'\'' 
     var where = 'WHERE `sensor_endpoint`.`id_sensor_endpoint` = ?'
     var query = update+set+where
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[sensor_endpoint_data.name,sensor_endpoint_data.description,sensor_endpoint_data.url_endpoint,sensor_endpoint_data.token_parameters,sensor_endpoint_data.specific_parameters,sensor_endpoint_data.watch_parameters,id_sensor_endpoint], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[sensor_endpoint_data.name,sensor_endpoint_data.description,sensor_endpoint_data.url_endpoint,sensor_endpoint_data.token_parameters,sensor_endpoint_data.specific_parameters,sensor_endpoint_data.watch_parameters,id_sensor_endpoint], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+    })
 })
 /*
 DELETE ENDPOINTS:
@@ -581,15 +727,23 @@ sensor_endpoint.delete('/sensor_endpoint/:id_sensor_endpoint',(req,res,next)=>{
     var deleteD = 'DELETE FROM `sensor_endpoint`'
     var where = 'WHERE `sensor_endpoint`. id_sensor_endpoint = ? '
     var query = deleteD+where    
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_sensor_endpoint], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[id_sensor_endpoint], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+    })
 })
 /*
 2) Borrar la relacion entre jugador y sensor_endpoint (players_sensor_endpoint)
@@ -606,15 +760,23 @@ sensor_endpoint.delete('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,r
     var where = 'WHERE `sensor_endpoint`. `id_sensor_endpoint` = ? '
     var and = 'AND `sensor_endpoint`. `id_players` = ?'
     var query = deleteD+where+and    
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_sensor_endpoint,id_players], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
 
-    mysqlConnection.query(query,[id_sensor_endpoint,id_players], function(err,rows,fields){
-        if (!err){
-            console.log(rows);
-            res.status(200).json(rows)
-        } else {
-            console.log(err);
-        }
-    });
+        });
+    })
 })
 
 
