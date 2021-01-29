@@ -16,7 +16,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.options('*', cors()) 
+app.use(cors())
 
 //Routes
 app.use(online_sensor);
