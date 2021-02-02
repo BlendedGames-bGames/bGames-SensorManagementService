@@ -87,6 +87,36 @@ online_sensor.get('/sensor/:id_online_sensor',(req,res,next)=>{
 
  
 })
+//2) Obtener TODOS los online_sensors (templates)
+
+online_sensor.get('/sensors_all',(req,res,next)=>{
+    var id_online_sensor = req.params.id_online_sensor;
+
+    var select = 'SELECT DISTINCT `online_sensor`.`id_online_sensor`, `online_sensor`.`name`,`online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`, `online_sensor`.`last_modified` '
+    var from = 'FROM `online_sensor` '
+
+    var query = select+from+where
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        }
+        connection.query(query,[id_online_sensor], function(err,rows,fields){
+            if (!err){
+                let result = rows[0]
+                console.log(rows);
+                res.status(200).json(result)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+      })
+
+ 
+})
 //2) Obtener TODOS los online_sensors relacionados a un player
 //WORKS
 online_sensor.get('/sensor_player/:id_player',(req,res,next)=>{
@@ -120,9 +150,9 @@ online_sensor.get('/sensor_player/:id_player',(req,res,next)=>{
 
 //3) Obtener TODOS los online_sensors asociados a players de TODOS los players
 //WORKS
-online_sensor.get('/sensors',(req,res,next)=>{
+online_sensor.get('/sensors_players',(req,res,next)=>{
 
-    var select = 'SELECT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`, `online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`, `online_sensor`.`last_modified` '
+    var select = 'SELECT DISTINCT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`, `online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`, `online_sensor`.`last_modified` '
     var from = ' FROM `playerss` '
     var join = ' JOIN `playerss_online_sensor` ON `playerss`.`id_players` = `playerss_online_sensor`.`id_players` JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `playerss_online_sensor`.`id_online_sensor` '
     var query = select+from+join
