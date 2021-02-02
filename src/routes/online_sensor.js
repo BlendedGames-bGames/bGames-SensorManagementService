@@ -92,10 +92,10 @@ online_sensor.get('/sensor/:id_online_sensor',(req,res,next)=>{
 online_sensor.get('/sensor_player/:id_player',(req,res,next)=>{
     var id_player = req.params.id_player;
 
-    var select = 'SELECT DISTINCT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`,`online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`,`online_sensor`.`last_modified`'
+    var select = 'SELECT DISTINCT `playerss`.`id_players`, `online_sensor`.`id_online_sensor`, `playerss_online_sensor`.`tokens`, `online_sensor`.`name`,`online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`,`online_sensor`.`last_modified` '
     var from = 'FROM `playerss` '
     var join = 'JOIN `playerss_online_sensor` ON `playerss`.`id_players` = `playerss_online_sensor`.`id_players`  JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `playerss_online_sensor`.`id_online_sensor` '
-    var where = 'WHERE  `playerss`.`id_players` = ?'
+    var where = 'WHERE  `playerss`.`id_players` = ? AND `playerss_online_sensor`.`id_players` = ? '
 
     var query = select+from+join+where
     mysqlConnection.getConnection(function(err, connection) {
