@@ -94,7 +94,7 @@ online_sensor.get('/sensors_all',(req,res,next)=>{
     var select = 'SELECT DISTINCT `online_sensor`.`id_online_sensor`, `online_sensor`.`name`,`online_sensor`.`description`, `online_sensor`.`base_url`, `online_sensor`.`initiated_date`, `online_sensor`.`last_modified` '
     var from = 'FROM `online_sensor` '
 
-    var query = select+from+where
+    var query = select+from
     mysqlConnection.getConnection(function(err, connection) {
         if (err){
             res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
