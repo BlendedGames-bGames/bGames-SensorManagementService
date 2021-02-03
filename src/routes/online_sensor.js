@@ -102,9 +102,8 @@ online_sensor.get('/sensors_all',(req,res,next)=>{
         }
         connection.query(query, function(err,rows,fields){
             if (!err){
-                let result = rows[0]
                 console.log(rows);
-                res.status(200).json(result)
+                res.status(200).json(rows)
             } else {
                 console.log(err);
                 res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
