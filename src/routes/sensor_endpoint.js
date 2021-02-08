@@ -681,7 +681,42 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,
     })
 
 })
-//2) Modificar la info del sensor endpoint template 
+//2) Activar/Desactivar un sensor endpoint asociado a un player
+
+sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint/activation',(req,res,next)=>{
+    var id_players = req.params.id_players
+    var id_sensor_endpoint = req.params.id_sensor_endpoint
+
+    var sensor_endpoint_data = req.body
+
+    var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
+
+   
+    var update = 'UPDATE `players_sensor_endpoint` '
+    var set = ' SET `activated` = ? ' 
+    var where = 'WHERE players_sensor_endpoint.id_players = ? '
+    var and = ' AND players_sensor_endpoint.id_sensor_endpoint = ? '
+    var query = update+set+where+and    
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[sensor_endpoint_data.activated,id_players,id_sensor_endpoint], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
+
+})
+//3) Modificar la info del sensor endpoint template 
 
 sensor_endpoint.put('/sensor_endpoint/:id_sensor_endpoint',(req,res,next)=>{
     var id_sensor_endpoint = req.params.id_sensor_endpoint
