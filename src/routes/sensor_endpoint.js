@@ -653,7 +653,7 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,
     var id_sensor_endpoint = req.params.id_sensor_endpoint
 
     var sensor_endpoint_data = req.body
-    var set = 'SET '
+    var set = ' SET '
     var queryArray = []
     if(sensor_endpoint_data.activated){
         set += '`activated` = ? ,'
