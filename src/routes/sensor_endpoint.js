@@ -673,6 +673,8 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,
     var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
     queryArray.push(id_players,id_sensor_endpoint)
    
+    console.log('Esto es lo que voy a actualizar')
+    console.log(sensor_endpoint_data.specific_parameters)
     var update = 'UPDATE `players_sensor_endpoint`'
     var where = 'WHERE `players_sensor_endpoint`.`id_players` = ? '
     var and = ' AND `players_sensor_endpoint`.`id_sensor_endpoint` = ? '
