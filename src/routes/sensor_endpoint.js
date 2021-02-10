@@ -674,8 +674,8 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,
     queryArray.push(id_players,id_sensor_endpoint)
    
     var update = 'UPDATE `players_sensor_endpoint`'
-    var where = 'WHERE players_sensor_endpoint.id_players = ? '
-    var and = ' AND players_sensor_endpoint.id_sensor_endpoint = ? '
+    var where = 'WHERE `players_sensor_endpoint`.`id_players` = ? '
+    var and = ' AND `players_sensor_endpoint`.`id_sensor_endpoint` = ? '
     var query = update+set+where+and    
     mysqlConnection.getConnection(function(err, connection) {
         if (err){
