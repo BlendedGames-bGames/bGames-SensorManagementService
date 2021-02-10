@@ -666,9 +666,9 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,
     }
     if(sensor_endpoint_data.specific_parameters){
         set += "`specific_parameters` = "
-        set += sensor_endpoint_data.specific_parameters +" , "
+        set += "'"+sensor_endpoint_data.specific_parameters +"' , "
     }
-    set.substring(0,set.length-2)
+    set = set.substring(0,set.length-2)
     console.log(set)
     var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
     queryArray.push(id_players,id_sensor_endpoint)
