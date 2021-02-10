@@ -666,7 +666,7 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,
     }
     if(sensor_endpoint_data.specific_parameters){
         set += "`specific_parameters` = "
-        set += "'"+sensor_endpoint_data.specific_parameters +"' , "
+        set += sensor_endpoint_data.specific_parameters +" , "
     }
     set.substring(0,set.length-2)
     console.log(set)
@@ -678,7 +678,11 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,
     var update = "UPDATE `players_sensor_endpoint`"
     var where = "WHERE `players_sensor_endpoint`.`id_players` = ? "
     var and = " AND `players_sensor_endpoint`.`id_sensor_endpoint` = ? "
-    var query = update+set+where+and    
+    var query = update+set+where+and 
+    console.log('\n \n \n')
+    console.log("este es el ultimo query")
+    console.log(query)   
+    console.log('\n \n \n')
     mysqlConnection.getConnection(function(err, connection) {
         if (err){
             res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
