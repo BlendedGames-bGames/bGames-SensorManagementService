@@ -653,20 +653,20 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,
     var id_sensor_endpoint = req.params.id_sensor_endpoint
 
     var sensor_endpoint_data = req.body
-    var set = ' SET '
+    var set = " SET "
     var queryArray = []
     if(sensor_endpoint_data.activated){
-        set += '`activated` = ? , '
+        set += "`activated` = ? , "
         queryArray.push(sensor_endpoint_data.activated)
     }
     if(sensor_endpoint_data.schedule_time){
-        set += '`schedule_time` = ? , '
+        set += "`schedule_time` = ? , "
         queryArray.push(sensor_endpoint_data.schedule_time)
 
     }
     if(sensor_endpoint_data.specific_parameters){
-        set += '`specific_parameters` = ? , '
-        queryArray.push(sensor_endpoint_data.specific_parameters)
+        set += "`specific_parameters` = "
+        set += "'"+sensor_endpoint_data.specific_parameters +"' , "
     }
     set.substring(0,set.length-2)
     console.log(set)
@@ -674,10 +674,10 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,
     queryArray.push(id_players,id_sensor_endpoint)
    
     console.log('Esto es lo que voy a actualizar')
-    console.log(sensor_endpoint_data.specific_parameters)
-    var update = 'UPDATE `players_sensor_endpoint`'
-    var where = 'WHERE `players_sensor_endpoint`.`id_players` = ? '
-    var and = ' AND `players_sensor_endpoint`.`id_sensor_endpoint` = ? '
+    console.log(set)
+    var update = "UPDATE `players_sensor_endpoint`"
+    var where = "WHERE `players_sensor_endpoint`.`id_players` = ? "
+    var and = " AND `players_sensor_endpoint`.`id_sensor_endpoint` = ? "
     var query = update+set+where+and    
     mysqlConnection.getConnection(function(err, connection) {
         if (err){
