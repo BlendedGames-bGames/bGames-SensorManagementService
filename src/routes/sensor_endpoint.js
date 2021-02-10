@@ -656,16 +656,16 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,
     var set = ' SET '
     var queryArray = []
     if(sensor_endpoint_data.activated){
-        set += '`activated` = ? ,'
+        set += '`activated` = ? , '
         queryArray.push(sensor_endpoint_data.activated)
     }
     if(sensor_endpoint_data.schedule_time){
-        set += '`schedule_time` = ? ,'
+        set += '`schedule_time` = ? , '
         queryArray.push(sensor_endpoint_data.schedule_time)
 
     }
     if(sensor_endpoint_data.specific_parameters){
-        set += '`specific_parameters` = ? ,'
+        set += '`specific_parameters` = ? , '
         queryArray.push(sensor_endpoint_data.specific_parameters)
     }
     set.substring(0,set.length-2)
