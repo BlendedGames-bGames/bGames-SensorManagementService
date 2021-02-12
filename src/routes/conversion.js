@@ -150,24 +150,21 @@ WHERE
     `conversion_sensor_endpoint`.`id_sensor_endpoint` = 2 AND `conversion`.`parameters_watched` IN ('followers')
 
 */
-conversion.get('/conversions',(req,res,next)=>{
+conversion.post('/conversions',(req,res,next)=>{
     console.log(req)
     console.log(req.body.id_sensor_endpoint)
     console.log(req.body.parameters_watched)
-    console.log(req.params.id_sensor_endpoint)
-    console.log(req.params.parameters_watched)
     var id_sensor_endpoint = req.body.id_sensor_endpoint;
     var parameters_watched = req.body.parameters_watched;
-    if(req.body.id_sensor_endpoint === undefined || req.body.id_sensor_endpoint === null){
-        id_sensor_endpoint = req.params.id_sensor_endpoint;
-        parameters_watched = req.params.parameters_watched;
+    if(id_sensor_endpoint === undefined || parameters_watched === null){
+        res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
     }
-
     var stringAux = ""
     var acum = ""
     var formatted = []
     for (const parameter of parameters_watched) {
-        //Array: ['finished','win']
+        //Ej parameters_watched =  [['finished','win'], ['elo'],['puzzle_challenge','record','true'],['puzzle_rush'],['chess_rapid','0','record','win']]
+        //Ej parameter = ['finished','win']
         for (let index = 0; index < parameter.length-1; index++) {
             acum += parameter[index]+",";
         }
