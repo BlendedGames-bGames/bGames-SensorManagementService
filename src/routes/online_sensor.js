@@ -62,8 +62,8 @@ online_sensor.get('/sensor_sensor_endpoints/:id_online_sensor',(req,res,next)=>{
     var id_online_sensor = req.params.id_online_sensor;
 
     var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `sensor_endpoint`.`specific_parameters '
-    var from = ' FROM `online_sensor` '
-    var join = ' JOIN `sensor_endpoint` ON `online_sensor`.`id_online_sensor` = `sensor_endpoint`.`sensor_endpoint_id_online_sensor` '
+    var from = ' FROM `sensor_endpoint` '
+    var join = ' JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `sensor_endpoint`.`sensor_endpoint_id_online_sensor` '
     var where = ' WHERE `online_sensor`.`id_online_sensor` = ? AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ? ' 
 
     var query = select+from+join+where
