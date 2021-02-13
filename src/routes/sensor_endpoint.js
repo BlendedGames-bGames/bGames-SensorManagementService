@@ -567,12 +567,12 @@ CREATE ENDPOINTS:
 
 //1)Crea asociacion de un jugador a un sensor_endpoint en especifico
 
-sensor_endpoint.post('/sensor_endpoint/:id_player/:id_sensor_endpoint',(req,res,next)=>{
+sensor_endpoint.post('/sensor_endpoint_batch/:id_player',(req,res,next)=>{
     var id_player = req.params.id_player;
-    var id_sensor_endpoint = req.params.id_sensor_endpoint;
 
-    var sensor_endpoint_data = req.body.sensor_endpoint_data
-    console.log(sensor_endpoint_data)
+    var ids_sensor_endpoint = req.body.ids_sensor_endpoint
+    var specific_parameter_parameters_array = req.body.specific_parameter_parameters_array
+
 
     //var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
@@ -585,17 +585,24 @@ sensor_endpoint.post('/sensor_endpoint/:id_player/:id_sensor_endpoint',(req,res,
             res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
             throw err
         } 
-        connection.query(query,[id_player,id_sensor_endpoint,sensor_endpoint_data.specific_parameters,sensor_endpoint_data.activated,sensor_endpoint_data.schedule_time], function(err,rows,fields){
-            if (!err){
-                console.log(rows);
-                res.status(200).json(rows)
-            } else {
-                console.log(err);
-                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
-            }
-            connection.release();
+        for(let i = 0; i< ids_sensor_endpoint.length; i++){ 
 
-        });
+            connection.query(query,[id_player,ids_sensor_endpoint[i],specific_parameter_parameters_array[i],0,30], function(err,rows,fields){
+                if (!err){
+                    console.log(rows);
+                    res.status(200).json(rows)
+                } else {
+                    console.log(err);
+                    res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+                }
+                connection.release();
+    
+            });
+
+
+        }
+
+
     })
 })
 
