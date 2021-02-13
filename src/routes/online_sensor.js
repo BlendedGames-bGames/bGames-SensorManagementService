@@ -249,6 +249,7 @@ online_sensor.post('/sensor_relation/:id_player/:id_online_sensor',(req,res,next
     var id_online_sensor = req.params.id_online_sensor
     var tokens = (req.body.tokens)
     console.log(typeof(tokens))
+    tokens = JSON.stringify(tokens)
 
     var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
