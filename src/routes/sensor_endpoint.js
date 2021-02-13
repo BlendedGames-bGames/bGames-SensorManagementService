@@ -576,9 +576,9 @@ sensor_endpoint.post('/sensor_endpoint_batch/:id_player',(req,res,next)=>{
 
     //var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
-    var insertInto = 'INSERT INTO `players_sensor_endpoint`'
-    var columnValues = '(`id_players`,`id_sensor_endpoint`,`specific_parameters`,`activated`, `schedule_time`)'
-    var newValues = 'VALUES (?,?,?,?,?)'
+    var insertInto = ' INSERT INTO `players_sensor_endpoint` '
+    var columnValues = ' (`id_players`,`id_sensor_endpoint`,`specific_parameters`,`activated`, `schedule_time`) '
+    var newValues = ' VALUES (?,?,?,?,?) '
     var query = insertInto+columnValues+newValues
     mysqlConnection.getConnection(function(err, connection) {
         if (err){
@@ -586,8 +586,10 @@ sensor_endpoint.post('/sensor_endpoint_batch/:id_player',(req,res,next)=>{
             throw err
         } 
         for(let i = 0; i< ids_sensor_endpoint.length; i++){ 
+            let specific_parameter_parameters_single = JSON.stringify(specific_parameter_parameters_array[i])
 
-            connection.query(query,[id_player,ids_sensor_endpoint[i],specific_parameter_parameters_array[i],0,30], function(err,rows,fields){
+
+            connection.query(query,[id_player,ids_sensor_endpoint[i],specific_parameter_parameters_single,0,30], function(err,rows,fields){
                 if (!err){
                     console.log(rows);
                     res.status(200).json(rows)
