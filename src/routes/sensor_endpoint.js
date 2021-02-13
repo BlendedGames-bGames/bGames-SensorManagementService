@@ -571,7 +571,7 @@ sensor_endpoint.post('/sensor_endpoint/:id_player/:id_sensor_endpoint',(req,res,
     var id_player = req.params.id_player;
     var id_sensor_endpoint = req.params.id_sensor_endpoint;
 
-    var sensor_endpoint_data = req.body
+    var sensor_endpoint_data = req.body.sensor_endpoint_data
     console.log(sensor_endpoint_data)
 
     //var date = new Date().toISOString().slice(0, 19).replace('T', ' ')

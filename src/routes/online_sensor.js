@@ -56,7 +56,38 @@ RETRIEVE ONLINE_SENSORS:
 */
 
 
-//1) Obtener un online_sensor en particular 
+//1) Obtener TODOS los endpoints de un sensor en especial
+//WORKS
+online_sensor.get('/sensor_sensor_endpoints/:id_online_sensor',(req,res,next)=>{
+    var id_online_sensor = req.params.id_online_sensor;
+
+    var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `sensor_endpoint`.`specific_parameters'
+    var from = 'FROM `online_sensor` '
+    var join = 'JOIN `sensor_endpoint` ON `online_sensor`.`id_online_sensor` = `sensor_endpoint`.`sensor_endpoint_id_online_sensor` '
+    var where = 'WHERE `online_sensor`.`id_online_sensor` = ? AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ?' 
+
+    var query = select+from+join+where
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        }
+        connection.query(query,[id_online_sensor,id_online_sensor], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+      })
+
+ 
+})
+//1.5) Obtener un online_sensor en particular 
 //WORKS
 online_sensor.get('/sensor/:id_online_sensor',(req,res,next)=>{
     var id_online_sensor = req.params.id_online_sensor;
