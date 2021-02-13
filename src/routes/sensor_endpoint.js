@@ -591,19 +591,18 @@ sensor_endpoint.post('/sensor_endpoint_batch/:id_player',(req,res,next)=>{
 
             connection.query(query,[id_player,ids_sensor_endpoint[i],specific_parameter_parameters_single,0,30], function(err,rows,fields){
                 if (!err){
-                    console.log(rows);
-                    res.status(200).json(rows)
                 } else {
                     console.log(err);
                     res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
                 }
-                connection.release();
     
             });
 
 
         }
+        res.status(200).json('Success')
 
+        connection.release();
 
     })
 })
