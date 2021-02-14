@@ -844,6 +844,42 @@ sensor_endpoint.delete('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,r
     })
 })
 
+sensor_endpoint.delete('/sensor_endpoint_batch/:id_player',(req,res,next)=>{
+    var id_player = req.params.id_player;
+
+    var ids_sensor_endpoint = req.body.ids_sensor_endpoint
+
+
+    //var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
+
+    
+    var deleteD = 'DELETE FROM `players_sensor_endpoint`'
+    var where = 'WHERE `sensor_endpoint`. `id_sensor_endpoint` = ? '
+    var and = 'AND `sensor_endpoint`. `id_players` = ?'
+    var query = deleteD+where+and    
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        for(let i = 0; i< ids_sensor_endpoint.length; i++){           
+            connection.query(query,[ids_sensor_endpoint[i],id_player], function(err,rows,fields){
+                if (!err){
+                } else {
+                    console.log(err);
+                    res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+                }
+    
+            });
+
+
+        }
+        res.status(200).json('Success')
+
+        connection.release();
+
+    })
+})
 
 
 
