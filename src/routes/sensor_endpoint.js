@@ -821,9 +821,9 @@ sensor_endpoint.delete('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,r
     var id_sensor_endpoint = req.params.id_sensor_endpoint
 
 
-    var deleteD = 'DELETE FROM `players_sensor_endpoint`'
-    var where = 'WHERE `sensor_endpoint`. `id_sensor_endpoint` = ? '
-    var and = 'AND `sensor_endpoint`. `id_players` = ?'
+    var deleteD = ' DELETE FROM `players_sensor_endpoint` '
+    var where = ' WHERE `sensor_endpoint`. `id_sensor_endpoint` = ? '
+    var and = ' AND `sensor_endpoint`. `id_players` = ? '
     var query = deleteD+where+and    
     mysqlConnection.getConnection(function(err, connection) {
         if (err){
@@ -853,9 +853,9 @@ sensor_endpoint.delete('/sensor_endpoint_batch/:id_player',(req,res,next)=>{
     //var date = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
     
-    var deleteD = 'DELETE FROM `players_sensor_endpoint`'
-    var where = 'WHERE `sensor_endpoint`. `id_sensor_endpoint` = ? '
-    var and = 'AND `sensor_endpoint`. `id_players` = ?'
+    var deleteD = ' DELETE FROM `players_sensor_endpoint` '
+    var where = ' WHERE `sensor_endpoint`. `id_sensor_endpoint` = ? '
+    var and = ' AND `sensor_endpoint`. `id_players` = ? '
     var query = deleteD+where+and    
     mysqlConnection.getConnection(function(err, connection) {
         if (err){
