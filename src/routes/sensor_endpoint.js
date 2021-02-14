@@ -586,9 +586,10 @@ sensor_endpoint.post('/sensor_endpoint_batch/:id_player',(req,res,next)=>{
             throw err
         } 
         for(let i = 0; i< ids_sensor_endpoint.length; i++){ 
-            let specific_parameter_parameters_single = JSON.stringify(specific_parameter_parameters_array[i])
-
-
+            let specific_parameter_parameters_single
+            if(specific_parameter_parameters_array[i] !== null){
+                specific_parameter_parameters_single = JSON.stringify(specific_parameter_parameters_array[i])
+            }
             connection.query(query,[id_player,ids_sensor_endpoint[i],specific_parameter_parameters_single,0,30], function(err,rows,fields){
                 if (!err){
                 } else {
