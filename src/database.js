@@ -4,10 +4,11 @@ var mysqlConnection  = mysql.createPool({
     connectTimeout  : 60 * 60 * 1000,
     acquireTimeout  : 60 * 60 * 1000,
     timeout         : 60 * 60 * 1000,
-    host:'db4free.net',
-    user:'grybyus',
-    password:'interaction1',
-    database: 'testbg',
+    host:'bgames-MysqlDB',
+    port:'3306',
+    user:'foo',
+    password:'Bnx69t304857@.@',
+    database: 'blended_games',
     multipleStatements:true
 });
 module.exports = mysqlConnection;
