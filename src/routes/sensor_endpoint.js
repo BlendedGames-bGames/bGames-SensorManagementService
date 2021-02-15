@@ -707,11 +707,8 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',wrap(asyn
                     'Content-Type': 'application/json;charset=UTF-8',
                     'Access-Control-Allow-Origin': '*'
                 };
-                //Modificar el sensor y luego si es que se quiere desactivar, se desactiva
-                
-                var path ='/edit_sensor_endpoint'    
-                var url = "http://"+onlineCaptureHost + path;
-                const MEDIUM_PUT_URL = url;
+                //Modificar el sensor y luego si es que se quiere desactivar, se desactiva              
+               
 
                 const putData = {
                     id_player: id_players,   
@@ -727,36 +724,48 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',wrap(asyn
                     specific_parameters:sensor_endpoint_data.specific_parameters,
                     schedule_time: sensor_endpoint_data.schedule_time                    
                 }
-                const response = await axios.put(MEDIUM_PUT_URL,putData)
-                
-                if(!sensor_endpoint_data.activated){
-                    try {
-                        var path ='/stop_sensor_endpoint'    
-                        var url = "http://"+onlineCaptureHost + path;
-                        const MEDIUM_PUT_URL = url;
-                        
-                        const response = await axios.put(MEDIUM_PUT_URL,{ unique_id:sensor_endpoint_data.unique_id})
-                        res.status(200).json(response.data)                    
-                    } 
-                    catch (error) {
-                        console.error(error);
-                        res.status(400).json({ message: 'No responde el servicio de captura, intente nuevamente' })
-                    }
-                }
-                else{
-                    res.status(200).json(response.data)
-                }        
+                notifyDataCapture(putData,res)
+                connection.release();
+
                 
             } else {
                 console.log(err);
                 res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+                connection.release();
+
             }
-            connection.release();
 
         });
     })
 
 }))
+
+
+async function notifyDataCapture(putData,res){
+    var path ='/edit_sensor_endpoint'    
+    var url = "http://"+onlineCaptureHost + path;
+    const MEDIUM_PUT_URL = url;
+    const response = await axios.put(MEDIUM_PUT_URL,putData)
+                
+    if(!putData.activated){
+        try {
+            var path ='/stop_sensor_endpoint'    
+            var url = "http://"+onlineCaptureHost + path;
+            const MEDIUM_PUT_URL = url;
+            
+            const response = await axios.put(MEDIUM_PUT_URL,{ unique_id:putData.unique_id})
+            res.status(200).json(response.data)                    
+        } 
+        catch (error) {
+            console.error(error);
+            res.status(400).json({ message: 'No responde el servicio de captura, intente nuevamente' })
+        }
+    }
+    else{
+        res.status(200).json(response.data)
+    }        
+    
+}
 //2) Activar/Desactivar un sensor endpoint asociado a un player
 
 sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint/activation',(req,res,next)=>{
