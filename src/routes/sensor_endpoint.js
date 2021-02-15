@@ -724,6 +724,7 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',wrap(asyn
                     specific_parameters:sensor_endpoint_data.specific_parameters,
                     schedule_time: sensor_endpoint_data.schedule_time                    
                 }
+                console.log(putData)
                 notifyDataCapture(putData,res)
                 connection.release();
 
