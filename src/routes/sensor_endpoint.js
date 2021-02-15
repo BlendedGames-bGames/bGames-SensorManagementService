@@ -667,16 +667,17 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',wrap(asyn
     var sensor_endpoint_data = req.body
     var set = " SET "
     var queryArray = []
-    if(sensor_endpoint_data.activated){
+    console.log(sensor_endpoint_data)
+    if(sensor_endpoint_data.hasOwnProperty('activated')){
         set += "`activated` = ? , "
         queryArray.push(sensor_endpoint_data.activated)
     }
-    if(sensor_endpoint_data.schedule_time){
+    if(sensor_endpoint_data.hasOwnProperty('schedule_time')){
         set += "`schedule_time` = ? , "
         queryArray.push(sensor_endpoint_data.schedule_time)
 
     }
-    if(sensor_endpoint_data.specific_parameters){
+    if(sensor_endpoint_data.hasOwnProperty('specific_parameters')){
         set += "`specific_parameters` = "
         set += "'"+sensor_endpoint_data.specific_parameters +"' , "
     }
