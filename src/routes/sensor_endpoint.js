@@ -1,6 +1,6 @@
 const express = require('express');
 const sensor_endpoint = express.Router();
-const onlineCaptureHost = "bgames-bgames-OnlineDataCapture:3005"
+const onlineCaptureHost = "bgames-OnlineDataCapture:3005"
 const axios = require('axios').default;
 const wrap = fn => (...args) => fn(...args).catch(args[2])
 
