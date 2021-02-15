@@ -2,6 +2,7 @@ const express = require('express');
 const sensor_endpoint = express.Router();
 const onlineCaptureHost = "bgames-bgames-OnlineDataCapture:3005"
 const axios = require('axios').default;
+const wrap = fn => (...args) => fn(...args).catch(args[2])
 
 const mysqlConnection = require('../database');
 
@@ -659,7 +660,7 @@ UPDATE ENDPOINTS:
 */
 //1) Modificar la info del sensor endpoint asociado a un player
 
-sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,next)=>{
+sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',wrap(async(req,res,next) =>{
     var id_players = req.params.id_players
     var id_sensor_endpoint = req.params.id_sensor_endpoint
 
@@ -755,7 +756,7 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,
         });
     })
 
-})
+}))
 //2) Activar/Desactivar un sensor endpoint asociado a un player
 
 sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint/activation',(req,res,next)=>{
