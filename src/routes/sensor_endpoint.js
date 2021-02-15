@@ -1,5 +1,7 @@
 const express = require('express');
 const sensor_endpoint = express.Router();
+const onlineCaptureHost = "bgames-bgames-OnlineDataCapture:3005"
+const axios = require('axios').default;
 
 const mysqlConnection = require('../database');
 
@@ -699,8 +701,51 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',(req,res,
         } 
         connection.query(query,queryArray, function(err,rows,fields){
             if (!err){
-                console.log(rows);
-                res.status(200).json(rows)
+                console.log(rows);    
+                var headers = {
+                    'Content-Type': 'application/json;charset=UTF-8',
+                    'Access-Control-Allow-Origin': '*'
+                };
+                //Modificar el sensor y luego si es que se quiere desactivar, se desactiva
+                
+                var path ='/edit_sensor_endpoint'    
+                var url = "http://"+onlineCaptureHost + path;
+                const MEDIUM_PUT_URL = url;
+
+                const putData = {
+                    id_player: id_players,   
+                    id_online_sensor: sensor_endpoint_data.id_online_sensor,
+                    id_sensor_endpoint: id_sensor_endpoint,
+                    watch_parameters:sensor_endpoint_data.watch_parameters,   
+                    unique_id:sensor_endpoint_data.unique_id,
+                    base_url: sensor_endpoint_data.base_url,
+                    url_endpoint: sensor_endpoint_data.url_endpoint,
+                    tokens:sensor_endpoint_data.tokens,
+                    token_parameters: sensor_endpoint_data.token_parameters,
+                    specific_parameters_template:sensor_endpoint_data.specific_parameters_template,
+                    specific_parameters:sensor_endpoint_data.specific_parameters,
+                    schedule_time: sensor_endpoint_data.schedule_time                    
+                }
+                const response = await axios.put(MEDIUM_PUT_URL,putData)
+                
+                if(!sensor_endpoint_data.activated){
+                    try {
+                        var path ='/stop_sensor_endpoint'    
+                        var url = "http://"+onlineCaptureHost + path;
+                        const MEDIUM_PUT_URL = url;
+                        
+                        const response = await axios.put(MEDIUM_PUT_URL,{ unique_id:sensor_endpoint_data.unique_id})
+                        res.status(200).json(response.data)                    
+                    } 
+                    catch (error) {
+                        console.error(error);
+                        res.status(400).json({ message: 'No responde el servicio de captura, intente nuevamente' })
+                    }
+                }
+                else{
+                    res.status(200).json(response.data)
+                }        
+                
             } else {
                 console.log(err);
                 res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
