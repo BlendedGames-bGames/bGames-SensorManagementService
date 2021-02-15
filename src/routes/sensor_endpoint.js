@@ -723,7 +723,9 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',wrap(asyn
                     token_parameters: sensor_endpoint_data.token_parameters,
                     specific_parameters_template:sensor_endpoint_data.specific_parameters_template,
                     specific_parameters:sensor_endpoint_data.specific_parameters,
-                    schedule_time: sensor_endpoint_data.schedule_time                    
+                    schedule_time: sensor_endpoint_data.schedule_time,                  
+                    activated: sensor_endpoint_data.activated                    
+
                 }
                 console.log(putData)
                 notifyDataCapture(putData,res)
@@ -749,7 +751,7 @@ async function notifyDataCapture(putData,res){
     const MEDIUM_PUT_URL = url;
     const response = await axios.put(MEDIUM_PUT_URL,putData)
                 
-    if(!putData.activated){
+    if(putData.activated !== undefined && putData.activated === 0 ){
         try {
             var path ='/stop_sensor_endpoint'    
             var url = "http://"+onlineCaptureHost + path;
