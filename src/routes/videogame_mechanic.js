@@ -202,7 +202,35 @@ videogame_mechanic.get('/videogames',(req,res,next)=>{
         });
     })
 })
+tables.get('/mechanics_of_videogame/:id_videogame',(req,res)=>{
+    let id_videogame = req.params.id_videogame;
+   
+    let select = 'SELECT `modifiable_mechanic`.`id_modifiable_mechanic`, `modifiable_mechanic`.`name`, `modifiable_mechanic`.`description`  '
+    let from = 'FROM `modifiable_mechanic` '
+    let join = 'JOIN `modifiable_mechanic_videogame` ON `modifiable_mechanic_videogame`.`id_modifiable_mechanic` = `modifiable_mechanic`.`id_modifiable_mechanic` '
+    let join2 = 'JOIN `videogame` ON `videogame`.`id_videogame` = `modifiable_mechanic_videogame`.`id_videogame` '
+    let where = 'WHERE `videogame`.`id_videogame` = ? AND `modifiable_mechanic_videogame`.`id_videogame` = ? '
+    let orderBy = 'ORDER BY `modifiable_mechanic`.`id_modifiable_mechanic`  ASC'
 
+    let query = select+from+join+join2+where+orderBy
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_videogame,id_videogame], function(err,rows,fields){
+            if (!err){
+              
+                res.status(200).json(rows);
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
+})
 //7) Obtener TODAS las relaciones videojuegos y mecanicas
 //WORKS
 videogame_mechanic.get('/modifiable_mechanic_videogame_all',(req,res,next)=>{
