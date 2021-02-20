@@ -202,7 +202,7 @@ videogame_mechanic.get('/videogames',(req,res,next)=>{
         });
     })
 })
-tables.get('/mechanics_of_videogame/:id_videogame',(req,res)=>{
+videogame_mechanic.get('/mechanics_of_videogame/:id_videogame',(req,res)=>{
     let id_videogame = req.params.id_videogame;
    
     let select = 'SELECT `modifiable_mechanic`.`id_modifiable_mechanic`, `modifiable_mechanic`.`name`, `modifiable_mechanic`.`description`  '
