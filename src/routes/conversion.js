@@ -217,12 +217,12 @@ conversion.post('/conversions',(req,res,next)=>{
 
 //4) Obtener TODOS las conversiones relacionados a atributos y una mecanica en especial
 
-conversion.get('/conversion_spend_attribute',(req,res,next)=>{
+conversion.get('/conversion_spend_attribute/:id_videogame/:id_modifiable_mechanic',(req,res,next)=>{
     console.log(req)
-    console.log(req.body.id_videogame)
-    console.log(req.body.id_modifiable_mechanic)
-    var id_videogame = req.body.id_videogame;
-    var id_modifiable_mechanic = req.body.id_modifiable_mechanic;
+    console.log(req.params.id_videogame)
+    console.log(req.params.id_modifiable_mechanic)
+    var id_videogame = req.params.id_videogame;
+    var id_modifiable_mechanic = req.params.id_modifiable_mechanic;
     if(id_videogame === undefined || id_modifiable_mechanic === undefined){
         res.status(400).json({"message": "Body lacks information"} )
     }
