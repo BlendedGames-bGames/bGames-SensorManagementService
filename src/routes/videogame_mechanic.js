@@ -205,7 +205,7 @@ videogame_mechanic.get('/videogames',(req,res,next)=>{
 videogame_mechanic.get('/mechanics_of_videogame/:id_videogame',(req,res)=>{
     let id_videogame = req.params.id_videogame;
    
-    let select = 'SELECT `modifiable_mechanic`.`id_modifiable_mechanic`, `modifiable_mechanic`.`name`, `modifiable_mechanic`.`description`  '
+    let select = 'SELECT `videogame`.`id_videogame`, `videogame`.`name` AS `name_videogame`, `modifiable_mechanic`.`id_modifiable_mechanic`, `modifiable_mechanic`.`name` AS `name_modifiable_mechanic`, `modifiable_mechanic`.`description`  '
     let from = 'FROM `modifiable_mechanic` '
     let join = 'JOIN `modifiable_mechanic_videogame` ON `modifiable_mechanic_videogame`.`id_modifiable_mechanic` = `modifiable_mechanic`.`id_modifiable_mechanic` '
     let join2 = 'JOIN `videogame` ON `videogame`.`id_videogame` = `modifiable_mechanic_videogame`.`id_videogame` '
