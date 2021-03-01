@@ -750,7 +750,10 @@ async function notifyDataCapture(putData,res){
     var url = "http://"+onlineCaptureHost + path;
     const MEDIUM_PUT_URL = url;
     const response = await axios.put(MEDIUM_PUT_URL,putData)
-                
+    console.log(putData)
+    console.log(putData.activated !== undefined)     
+    console.log(putData.activated === 0)      
+ 
     if(putData.activated !== undefined && putData.activated === 0 ){
         try {
             var path ='/stop_sensor_endpoint'    
