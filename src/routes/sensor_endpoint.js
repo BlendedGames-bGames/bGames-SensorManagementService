@@ -708,27 +708,36 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',wrap(asyn
                     'Content-Type': 'application/json;charset=UTF-8',
                     'Access-Control-Allow-Origin': '*'
                 };
-                //Modificar el sensor y luego si es que se quiere desactivar, se desactiva              
-               
+                //Modificar el sensor y luego si es que se quiere desactivar, se desactiva           
 
-                const putData = {
-                    id_player: id_players,   
-                    id_online_sensor: sensor_endpoint_data.id_online_sensor,
-                    id_sensor_endpoint: id_sensor_endpoint,
-                    watch_parameters:sensor_endpoint_data.watch_parameters,   
-                    unique_id:sensor_endpoint_data.unique_id,
-                    base_url: sensor_endpoint_data.base_url,
-                    url_endpoint: sensor_endpoint_data.url_endpoint,
-                    tokens:sensor_endpoint_data.tokens,
-                    token_parameters: sensor_endpoint_data.token_parameters,
-                    specific_parameters_template:sensor_endpoint_data.specific_parameters_template,
-                    specific_parameters:sensor_endpoint_data.specific_parameters,
-                    schedule_time: sensor_endpoint_data.schedule_time,                  
-                    activated: sensor_endpoint_data.activated                    
+                
+                if(sensor_endpoint_data.activated !== undefined ){
+                    
+                    const putData = {
+                        id_player: id_players,   
+                        id_online_sensor: sensor_endpoint_data.id_online_sensor,
+                        id_sensor_endpoint: id_sensor_endpoint,
+                        watch_parameters:sensor_endpoint_data.watch_parameters,   
+                        unique_id:sensor_endpoint_data.unique_id,
+                        base_url: sensor_endpoint_data.base_url,
+                        url_endpoint: sensor_endpoint_data.url_endpoint,
+                        tokens:sensor_endpoint_data.tokens,
+                        token_parameters: sensor_endpoint_data.token_parameters,
+                        specific_parameters_template:sensor_endpoint_data.specific_parameters_template,
+                        specific_parameters:sensor_endpoint_data.specific_parameters,
+                        schedule_time: sensor_endpoint_data.schedule_time,                  
+                        activated: sensor_endpoint_data.activated                    
+
+                    }
+                    console.log(putData)
+                    notifyDataCapture(putData,res)
 
                 }
-                console.log(putData)
-                notifyDataCapture(putData,res)
+                else{
+                    res.status(200).json(response.data)                    
+
+                }
+
                 connection.release();
 
                 
@@ -750,10 +759,7 @@ async function notifyDataCapture(putData,res){
     var url = "http://"+onlineCaptureHost + path;
     const MEDIUM_PUT_URL = url;
     const response = await axios.put(MEDIUM_PUT_URL,putData)
-    console.log(putData)
-    console.log(putData.activated !== undefined)     
-    console.log(putData.activated === 0)      
- 
+                
     if(putData.activated !== undefined && putData.activated === 0 ){
         try {
             var path ='/stop_sensor_endpoint'    
