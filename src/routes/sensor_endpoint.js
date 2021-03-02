@@ -734,7 +734,7 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',wrap(asyn
 
                 }
                 else{
-                    res.status(200).json(response.data)                    
+                    res.status(200).json({message:"Cambio realizado correctamente"})                    
 
                 }
 
