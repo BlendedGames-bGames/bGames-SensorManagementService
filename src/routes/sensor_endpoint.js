@@ -723,6 +723,7 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',wrap(asyn
                         url_endpoint: sensor_endpoint_data.url_endpoint,
                         tokens:sensor_endpoint_data.tokens,
                         token_parameters: sensor_endpoint_data.token_parameters,
+                        header_parameters: sensor_endpoint_data.header_parameters,
                         specific_parameters_template:sensor_endpoint_data.specific_parameters_template,
                         specific_parameters:sensor_endpoint_data.specific_parameters,
                         schedule_time: sensor_endpoint_data.schedule_time,                  
