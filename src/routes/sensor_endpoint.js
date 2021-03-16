@@ -167,7 +167,7 @@ sensor_endpoint.get('/sensor_endpoints/:id_player/:id_online_sensor',(req,res,ne
     var id_player = req.params.id_player;
     var id_online_sensor = req.params.id_online_sensor;
 
-    var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `sensor_endpoint`.`name` AS `name_sensor_endpoint`,  `sensor_endpoint`.`description`, `players_sensor_endpoint`.`id_players`, `online_sensor`.`id_online_sensor`, `online_sensor`.`name` AS `name_online_sensor`,`online_sensor`.`base_url`, `playerss_online_sensor`.`tokens`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`dynamic_url`,`sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters` AS `specific_parameters_template`, `sensor_endpoint`.`watch_parameters`, `sensor_endpoint`.`header_parameters`, `players_sensor_endpoint`.`specific_parameters`, `players_sensor_endpoint`.`activated`, `players_sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified` '
+    var select = 'SELECT DISTINCT `sensor_endpoint`.`id_sensor_endpoint`, `sensor_endpoint`.`name` AS `name_sensor_endpoint`,  `sensor_endpoint`.`description`, `players_sensor_endpoint`.`id_players`, `players_sensor_endpoint`.`id_players_sensor_endpoint`,`online_sensor`.`id_online_sensor`, `online_sensor`.`name` AS `name_online_sensor`,`online_sensor`.`base_url`, `playerss_online_sensor`.`tokens`, `sensor_endpoint`.`url_endpoint`, `sensor_endpoint`.`dynamic_url`,`sensor_endpoint`.`token_parameters`, `sensor_endpoint`.`specific_parameters` AS `specific_parameters_template`, `sensor_endpoint`.`watch_parameters`, `sensor_endpoint`.`header_parameters`, `players_sensor_endpoint`.`specific_parameters`, `players_sensor_endpoint`.`activated`, `players_sensor_endpoint`.`schedule_time`, `sensor_endpoint`.`initiated_date`, `sensor_endpoint`.`last_modified` '
     var from = ' FROM `online_sensor` '
     var join = 'JOIN `sensor_endpoint` ON `online_sensor`.`id_online_sensor` = `sensor_endpoint`.`sensor_endpoint_id_online_sensor` '
     var join2 = 'JOIN `playerss_online_sensor` ON `online_sensor`.`id_online_sensor` = `playerss_online_sensor`.`id_online_sensor` '
@@ -717,8 +717,8 @@ sensor_endpoint.put('/sensor_endpoint/:id_players/:id_sensor_endpoint',wrap(asyn
                         id_player: id_players,   
                         id_online_sensor: sensor_endpoint_data.id_online_sensor,
                         id_sensor_endpoint: id_sensor_endpoint,
+                        id_players_sensor_endpoint:sensor_endpoint_data.id_players_sensor_endpoint,
                         watch_parameters:sensor_endpoint_data.watch_parameters,   
-                        unique_id:sensor_endpoint_data.unique_id,
                         base_url: sensor_endpoint_data.base_url,
                         url_endpoint: sensor_endpoint_data.url_endpoint,
                         tokens:sensor_endpoint_data.tokens,
@@ -767,7 +767,7 @@ async function notifyDataCapture(putData,res){
             var url = "http://"+onlineCaptureHost + path;
             const MEDIUM_PUT_URL = url;
             
-            const response = await axios.put(MEDIUM_PUT_URL,{ unique_id:putData.unique_id})
+            const response = await axios.put(MEDIUM_PUT_URL,{ id_players_sensor_endpoint:putData.id_players_sensor_endpoint})
             res.status(200).json(response.data)                    
         } 
         catch (error) {
