@@ -363,6 +363,36 @@ sensor_endpoint.get('/sensor_endpoints_deactivated/:id_player',(req,res,next)=>{
         });
     })
 })
+//7.5) Obtener TODOS los sensor_endpoint relacionados a un online_sensor template
+//WORKS
+sensor_endpoint.get('/online_sensor/:id_online_sensor/all_sensor_endpoints',(req,res,next)=>{
+    var id_online_sensor = req.params.id_online_sensor;
+
+        
+    var select = 'SELECT *'
+    var from = 'FROM `sensor_endpoint` '
+    var join = 'JOIN `online_sensor` ON `online_sensor`.`id_online_sensor` = `sensor_endpoint`.`sensor_endpoint_id_online_sensor`'
+    var where = 'WHERE `online_sensor`.`id_online_sensor` = ? AND `sensor_endpoint`.`sensor_endpoint_id_online_sensor` = ?'
+    var query = select+from+join+where
+    mysqlConnection.getConnection(function(err, connection) {
+        if (err){
+            res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
+            throw err
+        } 
+        connection.query(query,[id_online_sensor,id_online_sensor], function(err,rows,fields){
+            if (!err){
+                console.log(rows);
+                res.status(200).json(rows)
+            } else {
+                console.log(err);
+                res.status(400).json({message:'No se pudo consultar a la base de datos', error: err})
+            }
+            connection.release();
+
+        });
+    })
+})
+
 
 //8) Obtener TODOS los sensor_endpoint relacionados a un online_sensor (activated y deactivated)(sin importar de que players son)
 //WORKS
