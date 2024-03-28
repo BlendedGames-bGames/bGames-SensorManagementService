@@ -87,7 +87,7 @@ conversion.get('/conversion/:id_conversion',(req,res,next)=>{
     var select = 'SELECT `conversion`.`name`, `conversion`.`description`, `conversion`.`operations`, `conversion`.`initiated_date`, `conversion`.`last_modified` '
     var from = ' FROM `conversion` '
     var where = 'WHERE `conversion`.`id_conversion` = ?'
-    var query = select+from+join
+    var query = select+from+where
     mysqlConnection.getConnection(function(err, connection) {
         if (err){
             res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
@@ -109,10 +109,10 @@ conversion.get('/conversion/:id_conversion',(req,res,next)=>{
 
 //1) Obtener TODAS las conversion en particular 
 //WORKS
-conversion.get('/conversions_all',(res,next)=>{
+conversion.get('/conversions_all',(req, res, next)=>{
     var select = 'SELECT `conversion`.`name`, `conversion`.`description`, `conversion`.`operations`, `conversion`.`initiated_date`, `conversion`.`last_modified` '
     var from = ' FROM `conversion` '
-    var query = select+from+join
+    var query = select+from
     mysqlConnection.getConnection(function(err, connection) {
         if (err){
             res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
@@ -184,14 +184,16 @@ conversion.post('/conversions',(req,res,next)=>{
     var select = 'SELECT `subattributes_conversion_sensor_endpoint`.`id_conversion`, `subattributes_conversion_sensor_endpoint`.`id_subattributes`, `conversion`.`operations` '
     var from = 'FROM `conversion` '
     var join = 'JOIN `subattributes_conversion_sensor_endpoint` ON `conversion`.`id_conversion` = `subattributes_conversion_sensor_endpoint`.`id_conversion`'
-    var where = 'WHERE `subattributes_conversion_sensor_endpoint`.`id_sensor_endpoint` = ? AND `subattributes_conversion_sensor_endpoint`.`parameters_watched` IN ('+stringAux+')' 
+    var where = 'WHERE `subattributes_conversion_sensor_endpoint`.`id_sensor_endpoint` = ?' 
     var query = select+from+join+where
     mysqlConnection.getConnection(function(err, connection) {
+        
         if (err){
             res.status(400).json({message:'No se pudo obtener una conexion para realizar la consulta en la base de datos, consulte nuevamente', error: err})
             throw err
         } 
         connection.query(query,[id_sensor_endpoint], function(err,rows,fields){
+            
             if (!err){
                 console.log(rows);
                 var id_conversions = []
@@ -200,7 +202,10 @@ conversion.post('/conversions',(req,res,next)=>{
                 rows.forEach(result => {
                     id_conversions.push(result.id_conversion)
                     id_subattributes.push(result.id_subattributes)
-                    operations.push(result.operations)                
+                    operations.push(result.operations)
+                    console.log("el id conversion:", result.id_conversion)
+                    console.log("el id subatt:", result.id_subattributes)
+                    console.log("el op:", result.operations)                
                 });
     
                 res.status(200).json({"id_conversions": id_conversions, "id_subattributes": id_subattributes, "operations": operations} )
